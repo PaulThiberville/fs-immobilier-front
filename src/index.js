@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Products from "./pages/Products";
 import reportWebVitals from "./reportWebVitals";
 
 //Redux
@@ -10,6 +9,16 @@ import { Provider } from "react-redux";
 
 //React router
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Contact from "./pages/contact";
+
+//Pages and components
+import Layout from "./components/layout";
+import Login from "./pages/login";
+import Products from "./pages/Products";
+import Home from "./pages/home";
+import NoPage from "./pages/noPage";
+import Dashboard from "./pages/dashboard";
+import CreateProduct from "./pages/createProduct";
 
 const store = configureAppStore();
 
@@ -18,7 +27,15 @@ root.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Products />}></Route>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="products/" element={<Products />} />
+          <Route path="contact/" element={<Contact />} />
+          <Route path="login/" element={<Login />} />
+          <Route path="dashboard/" element={<Dashboard />} />
+          <Route path="create/" element={<CreateProduct />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </Provider>
