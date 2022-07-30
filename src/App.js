@@ -1,22 +1,26 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { useSelector, useDispatch } from "react-redux";
-import { setProducts } from "./features/products";
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { productsActions } from "./features/products";
 
 function App() {
   const products = useSelector((state) => state.products.value);
+  const error = useSelector((state) => state.products.error);
+  const loading = useSelector((state) => state.products.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function getAllProducts() {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/product/");
-      dispatch(setProducts(await response.json()));
-    }
-    getAllProducts();
+    dispatch(productsActions.setProducts());
   }, []);
 
-  return <div className="App">{JSON.stringify(products)}</div>;
+  return (
+    <div className="App">
+      {loading && <p>Loading...</p>}
+      {error && <p>Error : {error}</p>}
+      {products[0] && <p>{JSON.stringify(products)}</p>}
+    </div>
+  );
 }
 
 export default App;
