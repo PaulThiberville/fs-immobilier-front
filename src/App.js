@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { useSelector, useDispatch } from "react-redux";
+import { setProducts } from "./features/products";
+import { useEffect } from "react";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const products = useSelector((state) => state.products.value);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    async function getAllProducts() {
+      const response = await fetch(process.env.REACT_APP_API_URL + "/product/");
+      dispatch(setProducts(await response.json()));
+    }
+    getAllProducts();
+  }, []);
+
+  return <div className="App">{JSON.stringify(products)}</div>;
 }
 
 export default App;
