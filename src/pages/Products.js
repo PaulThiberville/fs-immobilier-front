@@ -1,8 +1,6 @@
-import logo from "./logo.svg";
-import "./App.css";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { productsActions } from "./features/products";
+import { productsActions } from "../features/products";
 
 function App() {
   const products = useSelector((state) => state.products.value);
@@ -15,7 +13,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <div>
       {loading && <p>Loading...</p>}
       {error && <p>Error : {error}</p>}
       {products[0] && <p>{JSON.stringify(products)}</p>}
