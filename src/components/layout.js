@@ -1,7 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { userActions } from "../features/user";
 import styled from "styled-components";
+import { useEffect } from "react";
+import { userActions } from "../features/user";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -17,12 +18,7 @@ const StyledHeader = styled.header`
 
   nav {
     display: flex;
-    gap: 1px;
-    background-color: green;
-
-    a,
-    button {
-      background-color: white;
+    a {
       width: 100px;
       height: 50px;
       display: flex;
@@ -33,14 +29,6 @@ const StyledHeader = styled.header`
         color: green;
       }
     }
-
-    button {
-      background-color: green;
-      border: none;
-      p {
-        color: white;
-      }
-    }
   }
 `;
 
@@ -48,9 +36,12 @@ function Layout() {
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    dispatch(userActions.logout());
-  };
+  useEffect(() => {
+    if (!user) {
+      const localUser = localStorage.getItem("user");
+      if (localUser) dispatch(userActions.setUser(JSON.parse(localUser)));
+    }
+  }, []);
 
   return (
     <>
@@ -60,24 +51,21 @@ function Layout() {
           src="https://seeklogo.com/images/G/greenhouse-construction-building-logo-48938B0951-seeklogo.com.png"
         />
         <nav>
-          <Link to="/">
+          <Link to={"/"}>
             <p>Accueil</p>
           </Link>
-          <Link to="/products">
-            <p>Produits</p>
+          <Link to={"/buy"}>
+            <p>Acheter</p>
           </Link>
-          <Link to={"/contact"}>
-            <p>Contact</p>
+          <Link to={"/rent"}>
+            <p>Louer</p>
           </Link>
           {user && (
-            <Link to={"/dashboard"}>
-              <p>Dashboard</p>
-            </Link>
-          )}
-          {user && (
-            <button onClick={() => handleLogout()}>
-              <p>Logout</p>
-            </button>
+            <>
+              <Link to={"/dashboard"}>
+                <p>Dashboard</p>
+              </Link>
+            </>
           )}
         </nav>
       </StyledHeader>

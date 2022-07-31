@@ -27,7 +27,11 @@ function createInitialState() {
 function createReducers() {
   return {
     logout: (state) => {
+      localStorage.clear();
       state.value = undefined;
+    },
+    setUser: (state, action) => {
+      state.value = action.payload;
     },
   };
 }
@@ -70,6 +74,7 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
+          localStorage.setItem("user", JSON.stringify(action.payload.data));
           state.value = action.payload.data;
         }
       },

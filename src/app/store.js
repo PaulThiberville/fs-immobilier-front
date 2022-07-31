@@ -1,12 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { productsReducer } from "../features/products";
-import { userReducer } from "../features/user";
+import { categoriesReducer } from "../features/cotegories";
+import { typesReducer } from "../features/types";
+import { userActions, userReducer } from "../features/user";
 
 export default function configureAppStore() {
   const store = configureStore({
     reducer: {
       products: productsReducer,
       user: userReducer,
+      types: typesReducer,
+      categories: categoriesReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(handleStatus),
@@ -15,9 +19,13 @@ export default function configureAppStore() {
 }
 
 const handleStatus = (store) => (next) => (action) => {
-  let result = next(action);
-  if (action.payload?.status) {
-    console.log("Response Status :", action.payload.status);
+  let nextAction = next(action);
+  if (action.payload?.data) {
+    console.log("received data :", action.payload.data);
   }
-  return result;
+  if (action.payload?.status === 401) {
+    console.log("Received 401");
+    nextAction = next(store.dispatch(userActions.logout()));
+  }
+  return nextAction;
 };
