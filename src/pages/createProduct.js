@@ -5,21 +5,21 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
-import { typesActions } from "../features/types";
 import { categoriesActions } from "../features/cotegories";
 
 const StyledCreateProduct = styled.main`
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 50px;
+
   h1 {
     margin: 30px;
   }
+
   form {
     padding: 30px;
-    height: 100%;
     width: 100%;
     max-width: 500px;
     display: flex;
@@ -33,13 +33,15 @@ const StyledCreateProduct = styled.main`
       flex-direction: column;
 
       input,
+      select,
       textarea {
         width: 100%;
         border: none;
         border-bottom: 1px solid green;
       }
 
-      input {
+      input,
+      select {
         height: 30px;
       }
     }
@@ -78,10 +80,11 @@ const StyledCreateProduct = styled.main`
 
 function CreateProduct() {
   const user = useSelector((state) => state.user.value);
-  const types = useSelector((state) => state.types.value);
   const categories = useSelector((state) => state.categories.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [type, setType] = useState("buy");
+  const [category, setCategory] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -96,18 +99,19 @@ function CreateProduct() {
   });
 
   useEffect(() => {
-    dispatch(typesActions.getTypes(user));
     dispatch(categoriesActions.getCategories(user));
+    setCategory(categories[0]);
   }, []);
 
   const handleCreateProduct = (e) => {
     e.preventDefault();
-    console.log("validity:", inputValidity());
     if (inputValidity()) {
       dispatch(
         productsActions.addProduct({
           user,
           product: {
+            type,
+            category,
             title,
             description,
             price,
@@ -122,6 +126,8 @@ function CreateProduct() {
   };
 
   const inputValidity = () => {
+    if (type === "") return false;
+    if (category === "") return false;
     if (title === "") return false;
     if (description === "") return false;
     if (price === 0) return false;
@@ -133,11 +139,31 @@ function CreateProduct() {
 
   return (
     <StyledCreateProduct>
-      {"types: " + JSON.stringify(types)}
-      {"categories: " + JSON.stringify(categories)}
-
       <h1>Créer un produit :</h1>
       <form>
+        <label>
+          Type:
+          <select onChange={(e) => setType(e.target.value)} value={type}>
+            <option value={"buy"}>Achat</option>
+            <option value={"rent"}>Location</option>
+          </select>
+        </label>
+        <label>
+          Categorie:
+          <select
+            onChange={(e) => setCategory(e.target.value)}
+            value={category}
+          >
+            <option value={""}>--Choisir--</option>
+            {categories?.map((cat) => {
+              return (
+                <option key={cat._id} value={cat.value}>
+                  {cat.value}
+                </option>
+              );
+            })}
+          </select>
+        </label>
         <label>
           Titre:
           <input
@@ -203,7 +229,7 @@ function CreateProduct() {
           </button>
           <button
             onClick={(e) => {
-              handleCreateProduct();
+              navigate("/dashboard");
             }}
           >
             <FontAwesomeIcon icon={faCancel} />

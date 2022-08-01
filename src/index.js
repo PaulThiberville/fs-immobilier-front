@@ -19,6 +19,9 @@ import NoPage from "./pages/noPage";
 import Dashboard from "./pages/dashboard";
 import CreateProduct from "./pages/createProduct";
 import Rent from "./pages/rent";
+import CreateCategory from "./pages/createCategory";
+import EditProduct from "./pages/editProduct";
+import EditImages from "./pages/editImages";
 
 const store = configureAppStore();
 
@@ -33,7 +36,10 @@ root.render(
           <Route path="rent/" element={<Rent />} />
           <Route path="login/" element={<Login />} />
           <Route path="dashboard/" element={<Dashboard />} />
-          <Route path="create/" element={<CreateProduct />} />
+          <Route path="create/category" element={<CreateCategory />} />
+          <Route path="create/product" element={<CreateProduct />} />
+          <Route path="edit/product/:id" element={<EditProduct />} />
+          <Route path="edit/images/:id" element={<EditImages />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

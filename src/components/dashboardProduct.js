@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPen, faImage } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
 
 const StyledDashboardProduct = styled.article`
@@ -67,8 +67,11 @@ function DashboardProduct({ product }) {
         <p>{product.city}</p>
       </div>
       <div className="actions">
-        <Link to={"/edit/" + product._id}>
+        <Link to={"/edit/product/" + product._id}>
           <FontAwesomeIcon icon={faPen} />
+        </Link>
+        <Link to={"/edit/images/" + product._id}>
+          <FontAwesomeIcon icon={faImage} />
         </Link>
         <button onClick={() => handleDeleteProduct()}>
           <FontAwesomeIcon icon={faTrash} />

@@ -45,6 +45,7 @@ function createExtraActions() {
 
   function login() {
     return createAsyncThunk(`${name}/login`, async (credentials) => {
+      console.log("Base Url :", baseUrl);
       const response = await fetch(baseUrl + "/user/login", {
         method: "POST",
         headers: {

@@ -83,8 +83,11 @@ function Dashboard() {
   return (
     <StyledDashboard>
       <nav>
-        <Link to={"/create"}>
-          <p>Create</p>
+        <Link to={"/create/product"}>
+          <p>Ajouter un bien</p>
+        </Link>
+        <Link to={"/create/category"}>
+          <p>Ajouter une categorie</p>
         </Link>
         <button onClick={() => handleLogout()}>
           <p>Logout</p>
