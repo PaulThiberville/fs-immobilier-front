@@ -5,6 +5,7 @@ import { faAdd, faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { productsActions } from "../features/products";
 import { useNavigate, useParams } from "react-router-dom";
+import DashboardImage from "../components/dashboardImage";
 
 const StyledEditImages = styled.main`
   width: 100%;
@@ -96,17 +97,30 @@ function EditImages() {
   };
 
   const handleSaveNewImages = async () => {
+    let imagesToSave = [];
     for (let i = 0; i < newImages.length; i++) {
       const imgbbImage = await uploadImage(newImages[i]);
-      if (imgbbImage) {
-        console.log(imgbbImage);
-        await saveImage(imgbbImage);
+      console.log(imgbbImage);
+      if (imgbbImage.success === true) {
+        imagesToSave = [
+          ...imagesToSave,
+          {
+            url: imgbbImage.data.url,
+            thumb_url: imgbbImage.data.thumb.url,
+            delete_url: imgbbImage.data.delete_url,
+          },
+        ];
+        if (i === newImages.length - 1) {
+          console.log("Images to Save : ", imagesToSave);
+          await saveImages(imagesToSave);
+          navigate("/dashboard");
+        }
       }
     }
   };
 
   const uploadImage = async (image) => {
-    console.log("img :", image);
+    console.log("save : ", image);
     var formData = new FormData();
     formData.append("image", image);
     const response = await fetch(
@@ -119,7 +133,7 @@ function EditImages() {
     if (response.ok) return await response.json();
   };
 
-  const saveImage = async (imgbbImage) => {
+  const saveImages = async (imagesToSave) => {
     const response = await fetch(
       process.env.REACT_APP_API_URL + "/image/" + product._id,
       {
@@ -129,13 +143,28 @@ function EditImages() {
           "Content-Type": "application/json",
           Authorization: "Bearer " + user.token,
         },
-        body: JSON.stringify([imgbbImage]),
+        body: JSON.stringify(imagesToSave),
       }
     );
     if (response.ok) console.log("save response :", await response.json());
     else {
       console.log("save error :", await response.json());
     }
+  };
+
+  const handleRemoveNewImage = async (imageToDelete) => {
+    const response = await fetch(imageToDelete.delete_url);
+    if (response.ok) {
+      setNewImages(
+        [...newImages].filter((image) => {
+          return image !== imageToDelete;
+        })
+      );
+    }
+  };
+
+  const handleRemoveImage = (imageId) => {
+    dispatch(productsActions.removeImage({ user, imageId }));
   };
 
   if (error) return <p>Error: {error}</p>;
@@ -158,16 +187,20 @@ function EditImages() {
           </FileLabel>
           {product.images.map((image) => {
             return (
-              <img
+              <DashboardImage
                 key={image._id}
-                src={image.url}
-                alt={JSON.stringify(image)}
+                url={image.url}
+                onDelete={() => handleRemoveImage(image._id)}
               />
             );
           })}
           {newImages.map((image, index) => {
             return (
-              <img key={index} src={URL.createObjectURL(image)} alt="preview" />
+              <DashboardImage
+                key={index}
+                url={URL.createObjectURL(image)}
+                onDelete={() => handleRemoveNewImage(image)}
+              />
             );
           })}
         </Images>

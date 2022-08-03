@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // create slice
 
-const name = "categories";
+const name = "types";
 const initialState = createInitialState();
 const reducers = createReducers();
 const extraActions = createExtraActions();
@@ -11,8 +11,8 @@ const slice = createSlice({ name, initialState, reducers, extraReducers });
 
 // exports
 
-export const categoriesActions = { ...slice.actions, ...extraActions };
-export const categoriesReducer = slice.reducer;
+export const typesActions = { ...slice.actions, ...extraActions };
+export const typesReducer = slice.reducer;
 
 // implementation
 
@@ -32,15 +32,43 @@ function createExtraActions() {
   const baseUrl = process.env.REACT_APP_API_URL;
 
   return {
-    getCategories: getCategories(),
-    addCategory: addCategory(),
-    removeCategory: removeCategory(),
+    getTypes: getTypes(),
+    addType: addType(),
+    removeType: removeType(),
   };
 
-  function getCategories() {
-    return createAsyncThunk(`${name}/getCategories`, async (user) => {
-      const response = await fetch(baseUrl + "/category/", {
+  function getTypes() {
+    return createAsyncThunk(`${name}/getTypes`, async () => {
+      const response = await fetch(baseUrl + "/type/", {
         method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return { status: response.status, data: await response.json() };
+    });
+  }
+
+  function addType() {
+    return createAsyncThunk(`${name}/addType`, async ({ user, type }) => {
+      const response = await fetch(baseUrl + "/type/", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + user.token,
+        },
+        body: JSON.stringify({ value: type }),
+      });
+      return { status: response.status, data: await response.json() };
+    });
+  }
+
+  function removeType() {
+    return createAsyncThunk(`${name}/removeType`, async ({ user, typeId }) => {
+      const response = await fetch(baseUrl + "/Type/" + typeId, {
+        method: "DELETE",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -50,52 +78,17 @@ function createExtraActions() {
       return { status: response.status, data: await response.json() };
     });
   }
-
-  function addCategory() {
-    return createAsyncThunk(
-      `${name}/addCategory`,
-      async ({ user, category }) => {
-        const response = await fetch(baseUrl + "/category/", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-          body: JSON.stringify({ value: category }),
-        });
-        return { status: response.status, data: await response.json() };
-      }
-    );
-  }
-
-  function removeCategory() {
-    return createAsyncThunk(
-      `${name}/removeCategory`,
-      async ({ user, categoryId }) => {
-        const response = await fetch(baseUrl + "/category/" + categoryId, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-        });
-        return { status: response.status, data: await response.json() };
-      }
-    );
-  }
 }
 
 function createExtraReducers() {
   return {
-    ...getCategories(),
-    ...addCategory(),
-    ...removeCategory(),
+    ...getTypes(),
+    ...addType(),
+    ...removeType(),
   };
 
-  function getCategories() {
-    var { pending, fulfilled, rejected } = extraActions.getCategories;
+  function getTypes() {
+    var { pending, fulfilled, rejected } = extraActions.getTypes;
     return {
       [pending]: (state) => {
         state.loading = true;
@@ -117,8 +110,8 @@ function createExtraReducers() {
     };
   }
 
-  function addCategory() {
-    var { pending, fulfilled, rejected } = extraActions.addCategory;
+  function addType() {
+    var { pending, fulfilled, rejected } = extraActions.addType;
     return {
       [pending]: (state) => {
         state.loading = true;
@@ -140,8 +133,8 @@ function createExtraReducers() {
     };
   }
 
-  function removeCategory() {
-    var { pending, fulfilled, rejected } = extraActions.removeCategory;
+  function removeType() {
+    var { pending, fulfilled, rejected } = extraActions.removeType;
     return {
       [pending]: (state) => {
         state.loading = true;
@@ -151,8 +144,8 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = [...state.value].filter((category) => {
-            return category._id !== action.payload.data._id;
+          state.value = [...state.value].filter((Type) => {
+            return Type._id !== action.payload.data._id;
           });
         }
       },

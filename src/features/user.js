@@ -77,6 +77,7 @@ function createExtraReducers() {
         } else {
           localStorage.setItem("user", JSON.stringify(action.payload.data));
           state.value = action.payload.data;
+          state.error = "";
         }
       },
       [rejected]: (state, action) => {

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
-import { categoriesActions } from "../features/cotegories";
+import { typesActions } from "../features/types";
 
 const StyledCreateProduct = styled.main`
   width: 100%;
@@ -80,17 +80,19 @@ const StyledCreateProduct = styled.main`
 
 function CreateProduct() {
   const user = useSelector((state) => state.user.value);
-  const categories = useSelector((state) => state.categories.value);
+  const loading = useSelector((state) => state.products.loading);
+  const products = useSelector((state) => state.products.value);
+  const types = useSelector((state) => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [type, setType] = useState("buy");
-  const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
+  const [type, setType] = useState("");
+  const [category, setCategory] = useState("buy");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [city, setCity] = useState("");
   const [surface, setSurface] = useState(0);
   const [rooms, setRooms] = useState(0);
+  const [complete, setComplete] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -99,9 +101,14 @@ function CreateProduct() {
   });
 
   useEffect(() => {
-    dispatch(categoriesActions.getCategories(user));
-    setCategory(categories[0]);
+    dispatch(typesActions.getTypes());
   }, []);
+
+  useEffect(() => {
+    if (complete) {
+      navigate("/dashboard");
+    }
+  }, [products]);
 
   const handleCreateProduct = (e) => {
     e.preventDefault();
@@ -112,7 +119,6 @@ function CreateProduct() {
           product: {
             type,
             category,
-            title,
             description,
             price,
             city,
@@ -121,14 +127,13 @@ function CreateProduct() {
           },
         })
       );
-      navigate("/dashboard");
+      setComplete(true);
     }
   };
 
   const inputValidity = () => {
     if (type === "") return false;
     if (category === "") return false;
-    if (title === "") return false;
     if (description === "") return false;
     if (price === 0) return false;
     if (city === "") return false;
@@ -139,103 +144,95 @@ function CreateProduct() {
 
   return (
     <StyledCreateProduct>
-      <h1>Créer un produit :</h1>
-      <form>
-        <label>
-          Type:
-          <select onChange={(e) => setType(e.target.value)} value={type}>
-            <option value={"buy"}>Achat</option>
-            <option value={"rent"}>Location</option>
-          </select>
-        </label>
-        <label>
-          Categorie:
-          <select
-            onChange={(e) => setCategory(e.target.value)}
-            value={category}
-          >
-            <option value={""}>--Choisir--</option>
-            {categories?.map((cat) => {
-              return (
-                <option key={cat._id} value={cat.value}>
-                  {cat.value}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-        <label>
-          Titre:
-          <input
-            type={"text"}
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-          />
-        </label>
-        <p></p>
-        <label>
-          Description:
-          <textarea
-            type={"text"}
-            rows={5}
-            onChange={(e) => setDescription(e.target.value)}
-            value={description}
-          />
-        </label>
-        <p></p>
-        <label>
-          Prix:
-          <input
-            type={"number"}
-            onChange={(e) => setPrice(e.target.value)}
-            value={price}
-          />
-        </label>
-        <p></p>
-        <label>
-          Ville:
-          <input
-            type={"text"}
-            onChange={(e) => setCity(e.target.value)}
-            value={city}
-          />
-        </label>
-        <p></p>
-        <label>
-          Surface:
-          <input
-            type={"number"}
-            onChange={(e) => setSurface(e.target.value)}
-            value={surface}
-          />
-        </label>
-        <p></p>
-        <label>
-          Pieces:
-          <input
-            type={"number"}
-            onChange={(e) => setRooms(e.target.value)}
-            value={rooms}
-          />
-        </label>
-        <p></p>
-        <div>
-          <button
-            onClick={(e) => {
-              handleCreateProduct(e);
-            }}
-          >
-            <FontAwesomeIcon icon={faCheck} />
-          </button>
-          <button
-            onClick={(e) => {
-              navigate("/dashboard");
-            }}
-          >
-            <FontAwesomeIcon icon={faCancel} />
-          </button>
-        </div>
-      </form>
+      {loading === true && <p>Loading...</p>}
+      {loading === false && (
+        <form>
+          <label>
+            Categorie:
+            <select onChange={(e) => setCategory(e.target.value)} value={type}>
+              <option value={"buy"}>Achat</option>
+              <option value={"rent"}>Location</option>
+            </select>
+          </label>
+          <p></p>
+          <label>
+            Type:
+            <select onChange={(e) => setType(e.target.value)} value={type}>
+              <option value={""}>--Choisir--</option>
+              {types?.map((aType) => {
+                return (
+                  <option key={aType._id} value={aType.value}>
+                    {aType.value}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <p></p>
+          <label>
+            Description:
+            <textarea
+              type={"text"}
+              rows={5}
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
+            />
+          </label>
+          <p></p>
+          <label>
+            Prix:
+            <input
+              type={"number"}
+              onChange={(e) => setPrice(e.target.value)}
+              value={price}
+            />
+          </label>
+          <p></p>
+          <label>
+            Ville:
+            <input
+              type={"text"}
+              onChange={(e) => setCity(e.target.value)}
+              value={city}
+            />
+          </label>
+          <p></p>
+          <label>
+            Surface:
+            <input
+              type={"number"}
+              onChange={(e) => setSurface(e.target.value)}
+              value={surface}
+            />
+          </label>
+          <p></p>
+          <label>
+            Pieces:
+            <input
+              type={"number"}
+              onChange={(e) => setRooms(e.target.value)}
+              value={rooms}
+            />
+          </label>
+          <p></p>
+          <div>
+            <button
+              onClick={(e) => {
+                handleCreateProduct(e);
+              }}
+            >
+              <FontAwesomeIcon icon={faCheck} />
+            </button>
+            <button
+              onClick={(e) => {
+                navigate("/dashboard");
+              }}
+            >
+              <FontAwesomeIcon icon={faCancel} />
+            </button>
+          </div>
+        </form>
+      )}
     </StyledCreateProduct>
   );
 }

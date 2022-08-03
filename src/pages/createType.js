@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
-import { categoriesActions } from "../features/cotegories";
+import { typesActions } from "../features/types";
 
 const StyledCreateCategory = styled.main`
   width: 100%;
@@ -72,12 +72,12 @@ const StyledCreateCategory = styled.main`
   }
 `;
 
-function CreateCategory() {
+function CreateType() {
   const user = useSelector((state) => state.user.value);
-  const categories = useSelector((state) => state.categories.value);
+  const types = useSelector((state) => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [category, setCategory] = useState("");
+  const [type, setType] = useState("");
 
   useEffect(() => {
     if (!user) {
@@ -86,43 +86,43 @@ function CreateCategory() {
   });
 
   useEffect(() => {
-    dispatch(categoriesActions.getCategories(user));
+    dispatch(typesActions.getTypes());
   }, []);
 
-  const handleCreateCategory = (e) => {
+  const handleCreateType = (e) => {
     e.preventDefault();
     if (inputValidity()) {
-      dispatch(categoriesActions.addCategory({ user, category }));
+      dispatch(typesActions.addType({ user, type }));
       navigate("/dashboard");
     }
   };
 
   const inputValidity = () => {
     let valid = true;
-    if (category === "") valid = false;
-    categories?.forEach((cat) => {
-      if (cat.value.toLowerCase() === category.toLowerCase()) valid = false;
+    if (type === "") valid = false;
+    types?.forEach((aType) => {
+      if (aType.value.toLowerCase() === type.toLowerCase()) valid = false;
     });
     return valid;
   };
 
   return (
     <StyledCreateCategory>
-      <h1>Créer une catégorie :</h1>
+      <h1>Créer un type de bien :</h1>
       <form>
         <label>
-          Nouvelle Catégorie:
+          Nouveau type:
           <input
             type={"text"}
-            onChange={(e) => setCategory(e.target.value)}
-            value={category}
+            onChange={(e) => setType(e.target.value)}
+            value={type}
           />
         </label>
         <p></p>
         <div>
           <button
             onClick={(e) => {
-              handleCreateCategory(e);
+              handleCreateType(e);
             }}
           >
             <FontAwesomeIcon icon={faCheck} />
@@ -140,4 +140,4 @@ function CreateCategory() {
   );
 }
 
-export default CreateCategory;
+export default CreateType;

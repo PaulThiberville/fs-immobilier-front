@@ -76,7 +76,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (user) {
-      dispatch(productsActions.setProducts());
+      dispatch(productsActions.getProducts());
     }
   }, []);
 
@@ -86,18 +86,22 @@ function Dashboard() {
         <Link to={"/create/product"}>
           <p>Ajouter un bien</p>
         </Link>
-        <Link to={"/create/category"}>
-          <p>Ajouter une categorie</p>
+        <Link to={"/create/type"}>
+          <p>Ajouter un type de bien</p>
         </Link>
         <button onClick={() => handleLogout()}>
           <p>Logout</p>
         </button>
       </nav>
-      <section>
-        {products.map((product) => {
-          return <DashboardProduct key={product._id} product={product} />;
-        })}
-      </section>
+      {loading === true && <p>Loading...</p>}
+      {error === true && <p>Error: {error}</p>}
+      {products && loading === false && (
+        <section>
+          {products.map((product) => {
+            return <DashboardProduct key={product._id} product={product} />;
+          })}
+        </section>
+      )}
     </StyledDashboard>
   );
 }

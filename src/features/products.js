@@ -27,23 +27,31 @@ function createExtraActions() {
   const baseUrl = process.env.REACT_APP_API_URL;
 
   return {
-    setProducts: setProducts(),
+    getProducts: getProducts(),
+    getProduct: getProduct(),
     addProduct: addProduct(),
     removeProduct: removeProduct(),
     editProduct: editProduct(),
-    setProduct: setProduct(),
+    removeImage: removeImage(),
   };
 
-  function setProducts() {
-    return createAsyncThunk(`${name}/setProducts`, async () => {
-      const response = await fetch(baseUrl + "/product/");
+  function getProducts() {
+    return createAsyncThunk(`${name}/getProducts`, async (options) => {
+      const response = await fetch(baseUrl + "/product/search/", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(options),
+      });
       return { status: response.status, data: await response.json() };
     });
   }
 
-  function setProduct() {
+  function getProduct() {
     return createAsyncThunk(
-      `${name}/setProduct`,
+      `${name}/getProduct`,
       async ({ user, productId }) => {
         const response = await fetch(baseUrl + "/product/" + productId, {
           method: "GET",
@@ -107,19 +115,37 @@ function createExtraActions() {
       }
     );
   }
+
+  function removeImage() {
+    return createAsyncThunk(
+      `${name}/removeImage`,
+      async ({ user, imageId }) => {
+        const response = await fetch(baseUrl + "/image/" + imageId, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + user.token,
+          },
+        });
+        return { status: response.status, data: await response.json() };
+      }
+    );
+  }
 }
 
 function createExtraReducers() {
   return {
-    ...setProducts(),
+    ...getProducts(),
+    ...getProduct(),
     ...addProduct(),
     ...removeProduct(),
     ...editProduct(),
-    ...setProduct(),
+    ...removeImage(),
   };
 
-  function setProducts() {
-    var { pending, fulfilled, rejected } = extraActions.setProducts;
+  function getProducts() {
+    var { pending, fulfilled, rejected } = extraActions.getProducts;
     return {
       [pending]: (state) => {
         state.loading = true;
@@ -141,8 +167,8 @@ function createExtraReducers() {
     };
   }
 
-  function setProduct() {
-    var { pending, fulfilled, rejected } = extraActions.setProduct;
+  function getProduct() {
+    var { pending, fulfilled, rejected } = extraActions.getProduct;
     return {
       [pending]: (state) => {
         state.loading = true;
@@ -153,6 +179,7 @@ function createExtraReducers() {
           state.error = action.payload.data.error;
         } else {
           state.value = [action.payload.data];
+          state.error = "";
         }
       },
       [rejected]: (state, action) => {
@@ -228,6 +255,34 @@ function createExtraReducers() {
         } else {
           state.value = [...state.value].filter((product) => {
             return product._id !== action.payload.data._id;
+          });
+        }
+      },
+      [rejected]: (state, action) => {
+        state.loading = false;
+        if (action.error) {
+          state.error = action.error.message;
+        }
+      },
+    };
+  }
+
+  function removeImage() {
+    var { pending, fulfilled, rejected } = extraActions.removeImage;
+    return {
+      [pending]: (state) => {
+        state.loading = true;
+      },
+      [fulfilled]: (state, action) => {
+        state.loading = false;
+        if (action.payload.data.error) {
+          state.error = action.payload.data.error;
+        } else {
+          state.value = [...state.value].map((product) => {
+            if (product._id === action.payload.data._id) {
+              return action.payload.data;
+            }
+            return product;
           });
         }
       },

@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { productsReducer } from "../features/products";
-import { categoriesReducer } from "../features/cotegories";
+import { typesReducer } from "../features/types";
 import { userActions, userReducer } from "../features/user";
 
 export default function configureAppStore() {
@@ -8,7 +8,7 @@ export default function configureAppStore() {
     reducer: {
       products: productsReducer,
       user: userReducer,
-      categories: categoriesReducer,
+      types: typesReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(handleStatus),
@@ -19,7 +19,7 @@ export default function configureAppStore() {
 const handleStatus = (store) => (next) => (action) => {
   let nextAction = next(action);
   if (action.payload?.data) {
-    //console.log("received data :", action.payload.data);
+    console.log("received data :", action.payload.data);
   }
   if (action.payload?.status === 401) {
     console.log("Received 401");

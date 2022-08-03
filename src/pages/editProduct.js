@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
-import { categoriesActions } from "../features/cotegories";
+import { typesActions } from "../features/types";
 
 const StyledEditProduct = styled.main`
   width: 100%;
@@ -83,12 +83,11 @@ function EditProduct() {
   const product = useSelector((state) => state.products.value[0]);
   const loading = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
-  const categories = useSelector((state) => state.categories.value);
+  const types = useSelector((state) => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [type, setType] = useState("");
   const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [city, setCity] = useState("");
@@ -103,12 +102,12 @@ function EditProduct() {
 
   useEffect(() => {
     dispatch(productsActions.setProduct({ user, productId: id }));
+    dispatch(typesActions.getTypes());
   }, []);
 
   useEffect(() => {
     setType(product.type);
     setCategory(product.category);
-    setTitle(product.title);
     setDescription(product.description);
     setPrice(product.price);
     setCity(product.city);
@@ -125,7 +124,6 @@ function EditProduct() {
           product: {
             type,
             category,
-            title,
             description,
             price,
             city,
@@ -140,7 +138,6 @@ function EditProduct() {
   };
 
   const inputValidity = () => {
-    if (title === "") return false;
     if (type === "") return false;
     if (category === "") return false;
     if (description === "") return false;
@@ -159,35 +156,24 @@ function EditProduct() {
         <h1>Editer un produit :</h1>
         <form>
           <label>
-            Type:
-            <select onChange={(e) => setType(e.target.value)} value={type}>
+            Categorie:
+            <select onChange={(e) => setCategory(e.target.value)} value={type}>
               <option value={"buy"}>Achat</option>
               <option value={"rent"}>Location</option>
             </select>
           </label>
           <label>
-            Categorie:
-            <select
-              onChange={(e) => setCategory(e.target.value)}
-              value={category}
-            >
+            Type:
+            <select onChange={(e) => setType(e.target.value)} value={type}>
               <option value={""}>--Choisir--</option>
-              {categories?.map((cat) => {
+              {types?.map((aType) => {
                 return (
-                  <option key={cat._id} value={cat.value}>
-                    {cat.value}
+                  <option key={aType._id} value={aType.value}>
+                    {aType.value}
                   </option>
                 );
               })}
             </select>
-          </label>
-          <label>
-            Titre:
-            <input
-              type={"text"}
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-            />
           </label>
           <p></p>
           <label>
