@@ -50,20 +50,16 @@ function createExtraActions() {
   }
 
   function getProduct() {
-    return createAsyncThunk(
-      `${name}/getProduct`,
-      async ({ user, productId }) => {
-        const response = await fetch(baseUrl + "/product/" + productId, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-        });
-        return { status: response.status, data: await response.json() };
-      }
-    );
+    return createAsyncThunk(`${name}/getProduct`, async (productId) => {
+      const response = await fetch(baseUrl + "/product/" + productId, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return { status: response.status, data: await response.json() };
+    });
   }
 
   function addProduct() {

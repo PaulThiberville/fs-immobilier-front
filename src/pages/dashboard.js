@@ -6,9 +6,12 @@ import { userActions } from "../features/user";
 import { productsActions } from "../features/products";
 import styled from "styled-components";
 import DashboardProduct from "../components/dashboardProduct";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAdd, faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import Loader from "../components/loader";
 
 const StyledDashboard = styled.main`
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   display: flex;
   gap: 10px;
@@ -28,19 +31,19 @@ const StyledDashboard = styled.main`
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
       padding-left: 10px;
+      gap: 10px;
 
-      p {
+      * {
         color: green;
         font-weight: bold;
+        font-size: 16px;
       }
 
       &:hover {
         cursor: pointer;
         background-color: green;
-        p {
+        * {
           color: white;
         }
       }
@@ -84,16 +87,19 @@ function Dashboard() {
     <StyledDashboard>
       <nav>
         <Link to={"/create/product"}>
+          <FontAwesomeIcon icon={faAdd} />
           <p>Ajouter un bien</p>
         </Link>
         <Link to={"/create/type"}>
+          <FontAwesomeIcon icon={faAdd} />
           <p>Ajouter un type de bien</p>
         </Link>
         <button onClick={() => handleLogout()}>
-          <p>Logout</p>
+          <FontAwesomeIcon icon={faPowerOff} />
+          <p>Se deconnecter</p>
         </button>
       </nav>
-      {loading === true && <p>Loading...</p>}
+      {loading === true && <Loader />}
       {error === true && <p>Error: {error}</p>}
       {products && loading === false && (
         <section>

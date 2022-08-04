@@ -7,9 +7,12 @@ import { productsActions } from "../features/products";
 
 const StyledDashboardProduct = styled.article`
   width: 100%;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid green;
+  border-left: 5px solid green;
   .actions {
     display: flex;
     gap: 10px;
@@ -46,7 +49,7 @@ function DashboardProduct({ product }) {
 
   return (
     <StyledDashboardProduct>
-      <p>{product._id}</p>
+      <h1>{product._id}</h1>
       <p>{product.city}</p>
       <div className="actions">
         <Link to={"/edit/product/" + product._id}>

@@ -18,9 +18,6 @@ export default function configureAppStore() {
 
 const handleStatus = (store) => (next) => (action) => {
   let nextAction = next(action);
-  if (action.payload?.data) {
-    console.log("received data :", action.payload.data);
-  }
   if (action.payload?.status === 401) {
     console.log("Received 401");
     nextAction = next(store.dispatch(userActions.logout()));

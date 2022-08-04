@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
 import { typesActions } from "../features/types";
+import Loader from "../components/loader";
 
 const StyledEditProduct = styled.main`
   width: 100%;
@@ -101,7 +102,7 @@ function EditProduct() {
   });
 
   useEffect(() => {
-    dispatch(productsActions.setProduct({ user, productId: id }));
+    dispatch(productsActions.getProduct(id));
     dispatch(typesActions.getTypes());
   }, []);
 
@@ -149,7 +150,7 @@ function EditProduct() {
   };
 
   if (error) return <p>Error: {error}</p>;
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (product)
     return (
       <StyledEditProduct>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { productsActions } from "../features/products";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardImage from "../components/dashboardImage";
+import Loader from "../components/loader";
 
 const StyledEditImages = styled.main`
   width: 100%;
@@ -84,10 +85,8 @@ function EditImages() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.token) {
-      dispatch(productsActions.setProduct({ user, productId: id }));
-    }
-  }, [user]);
+    dispatch(productsActions.getProduct(id));
+  }, []);
 
   const onInput = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -168,7 +167,7 @@ function EditImages() {
   };
 
   if (error) return <p>Error: {error}</p>;
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (product)
     return (
       <StyledEditImages>

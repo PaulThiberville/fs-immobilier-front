@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { productsActions } from "../features/products";
 import { typesActions } from "../features/types";
+import Loader from "../components/loader";
 
 const StyledCreateProduct = styled.main`
   width: 100%;
@@ -13,7 +14,7 @@ const StyledCreateProduct = styled.main`
   flex-direction: column;
   align-items: center;
   padding-bottom: 50px;
-
+  min-height: 100%;
   h1 {
     margin: 30px;
   }
@@ -80,7 +81,7 @@ const StyledCreateProduct = styled.main`
 
 function CreateProduct() {
   const user = useSelector((state) => state.user.value);
-  const loading = useSelector((state) => state.products.loading);
+  const loading = useSelector((state) => state.types.loading);
   const products = useSelector((state) => state.products.value);
   const types = useSelector((state) => state.types.value);
   const dispatch = useDispatch();
@@ -144,7 +145,7 @@ function CreateProduct() {
 
   return (
     <StyledCreateProduct>
-      {loading === true && <p>Loading...</p>}
+      {loading === true && <Loader />}
       {loading === false && (
         <form>
           <label>
