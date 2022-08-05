@@ -1,4 +1,4 @@
-import { MutatingDots } from "react-loader-spinner";
+import { TailSpin } from "react-loader-spinner";
 import styled from "styled-components";
 
 const StyledLoader = styled.div`
@@ -12,14 +12,13 @@ const StyledLoader = styled.div`
 function Loader() {
   return (
     <StyledLoader>
-      <MutatingDots
+      <TailSpin
         height="80"
         width="80"
         radius="9"
         color="green"
-        ariaLabel="three-dots-loading"
+        ariaLabel="tail-spin-loading"
         wrapperStyle
-        wrapperClass
       />
     </StyledLoader>
   );

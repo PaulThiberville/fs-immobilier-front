@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Gallery from "./gallery";
+
+const fadeIn = keyframes`
+  from {
+    opacity:0;
+  }
+
+  to {
+    opacity:1;
+  }
+`;
 
 const StyledProductPreview = styled.article`
   padding: 10px;
@@ -8,6 +18,7 @@ const StyledProductPreview = styled.article`
   flex-wrap: wrap;
   display: flex;
   flex-direction: column;
+  animation: ${fadeIn} 0.5s linear;
   .container {
     display: flex;
     flex-direction: column;
@@ -23,6 +34,14 @@ const StyledProductPreview = styled.article`
       flex-direction: column;
       flex-grow: 1;
       width: 100%;
+      .description {
+        height: 100px;
+        width: 100%;
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: pre-wrap;
+      }
     }
   }
 `;
@@ -38,7 +57,7 @@ function ProductPreview({ product }) {
           <p>{product.city}</p>
           <p>{product.rooms + " pieces"}</p>
           <p>{product.price + " €"}</p>
-          <p>{product.description}</p>
+          <p className="description">{product.description}</p>
         </Link>
       </div>
     </StyledProductPreview>

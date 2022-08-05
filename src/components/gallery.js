@@ -66,8 +66,10 @@ function Gallery({ images, type }) {
   ]);
 
   useEffect(() => {
-    if (images[0]) {
-      setDisplayables(images);
+    if (images) {
+      if (images[0]) {
+        setDisplayables(images);
+      }
     }
   }, []);
 

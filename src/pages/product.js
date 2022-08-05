@@ -24,7 +24,26 @@ const StyledProduct = styled.main`
     width: 50%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+
+    .first-line {
+      display: flex;
+      justify-content: space-between;
+      strong,
+      p {
+        font-size: 25px;
+      }
+      h2 {
+        font-size: 30px;
+      }
+    }
+
+    .description {
+      white-space: pre-wrap;
+      flex-grow: 1;
+      overflow-y: scroll;
+      margin: 30px;
+    }
   }
 `;
 
@@ -49,12 +68,17 @@ function Product() {
             <Gallery images={product.images} type={"full"} />
           </div>
           <div className="infos-container">
-            <h2>{product.price + " €"}</h2>
-            <p>{product.city}</p>
-            <p>{product.surface + " m2"}</p>
-            <p>{product.rooms + " pieces"}</p>
-            <p>{product.description}</p>
-            <p>{product.createdAt}</p>
+            <p className="first-line">
+              <strong>{product.city}</strong>
+              <p>{product.surface + " m2"}</p>
+              <p>{product.rooms + " pieces"}</p>
+              <h2>{product.price + " €"}</h2>
+            </p>
+            <p className="description">{product.description}</p>
+            <p>
+              Publié le :{" "}
+              {new Date(product.createdAt).toLocaleDateString("fr-FR")}
+            </p>
           </div>
         </section>
         <ContactForm productId={product._id} />

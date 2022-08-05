@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { typesActions } from "../features/types";
 import { productsActions } from "../features/products";
+import { citiesActions } from "../features/cities";
+import { EmailJSResponseStatus } from "@emailjs/browser";
 
 const StyledSearch = styled.form`
   margin: 10px;
@@ -28,6 +30,7 @@ const StyledSearch = styled.form`
         width: 50px;
         padding-left: 5px;
       }
+
       * {
         flex-grow: 1;
         height: 30px;
@@ -41,8 +44,9 @@ const StyledSearch = styled.form`
   }
 `;
 
-function Search({ category }) {
+function Search({ category, setOptions }) {
   const types = useSelector((state) => state.types.value);
+  const cities = useSelector((state) => state.cities.value);
   const [city, setCity] = useState("");
   const [price, setPrice] = useState(0);
   const [surface, setSurface] = useState(0);
@@ -53,10 +57,12 @@ function Search({ category }) {
   useEffect(() => {
     dispatch(typesActions.getTypes());
     dispatch(productsActions.getProducts({ category }));
+    setOptions({ category });
   }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
+    dispatch(productsActions.reinit());
     const options = {};
     if (city) options.city = city;
     if (price) options.price = price;
@@ -65,7 +71,19 @@ function Search({ category }) {
     if (type) options.type = type;
     if (category) options.category = category;
     dispatch(productsActions.getProducts(options));
+    setOptions(options);
   };
+
+  useEffect(() => {
+    dispatch(citiesActions.clear());
+    if (city.length >= 1) {
+      dispatch(citiesActions.getCities(city));
+    }
+  }, [city]);
+
+  useState(() => {
+    return dispatch(productsActions.reinit());
+  }, []);
 
   return (
     <>
@@ -73,10 +91,16 @@ function Search({ category }) {
         <div className="container">
           <fieldset>
             <input
+              list="cities"
               type={"text"}
               placeholder={"Ville"}
               onChange={(e) => setCity(e.target.value)}
             ></input>
+            <datalist id="cities">
+              {cities?.map((aCity, index) => {
+                return <option key={index} value={aCity} />;
+              })}
+            </datalist>
           </fieldset>
           <fieldset>
             <input

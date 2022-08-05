@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { citiesReducer } from "../features/cities";
 import { productsReducer } from "../features/products";
 import { typesReducer } from "../features/types";
 import { userActions, userReducer } from "../features/user";
@@ -9,6 +10,7 @@ export default function configureAppStore() {
       products: productsReducer,
       user: userReducer,
       types: typesReducer,
+      cities: citiesReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(handleTokenExpiration, handleStatus),

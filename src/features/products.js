@@ -4,9 +4,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const name = "products";
 const initialState = createInitialState();
+const reducers = createReducers();
 const extraActions = createExtraActions();
 const extraReducers = createExtraReducers();
-const slice = createSlice({ name, initialState, extraReducers });
+const slice = createSlice({ name, initialState, reducers, extraReducers });
 
 // exports
 
@@ -17,9 +18,25 @@ export const productsReducer = slice.reducer;
 
 function createInitialState() {
   return {
-    value: [],
+    value: undefined,
+    page: 0,
+    limit: 6,
+    full: false,
     loading: false,
     error: "",
+  };
+}
+
+function createReducers() {
+  return {
+    reinit: (state) => {
+      state.value = undefined;
+      state.page = 0;
+      state.limit = 6;
+      state.full = false;
+      state.loading = false;
+      state.error = "";
+    },
   };
 }
 
@@ -28,6 +45,7 @@ function createExtraActions() {
 
   return {
     getProducts: getProducts(),
+    getMoreProducts: getMoreProducts(),
     getProduct: getProduct(),
     addProduct: addProduct(),
     removeProduct: removeProduct(),
@@ -36,17 +54,49 @@ function createExtraActions() {
   };
 
   function getProducts() {
-    return createAsyncThunk(`${name}/getProducts`, async (options) => {
-      const response = await fetch(baseUrl + "/product/search/", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(options),
-      });
-      return { status: response.status, data: await response.json() };
-    });
+    return createAsyncThunk(
+      `${name}/getProducts`,
+      async (options, { getState }) => {
+        const state = getState();
+        const newOptions = {
+          ...options,
+          offset: 0,
+          limit: state.products.limit,
+        };
+        const response = await fetch(baseUrl + "/product/search/", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newOptions),
+        });
+        return { status: response.status, data: await response.json() };
+      }
+    );
+  }
+
+  function getMoreProducts() {
+    return createAsyncThunk(
+      `${name}/getMoreProducts`,
+      async (options, { getState }) => {
+        const state = getState();
+        const newOptions = {
+          ...options,
+          offset: state.products.limit * state.products.page,
+          limit: state.products.limit,
+        };
+        const response = await fetch(baseUrl + "/product/search/", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newOptions),
+        });
+        return { status: response.status, data: await response.json() };
+      }
+    );
   }
 
   function getProduct() {
@@ -138,6 +188,7 @@ function createExtraReducers() {
     ...removeProduct(),
     ...editProduct(),
     ...removeImage(),
+    ...getMoreProducts(),
   };
 
   function getProducts() {
@@ -151,7 +202,44 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = action.payload.data;
+          console.log("count:", action.payload.data.count);
+          if (action.payload.data.count <= state.limit) {
+            state.full = true;
+          } else {
+            state.full = false;
+          }
+          state.value = [...action.payload.data.products];
+          state.page++;
+        }
+      },
+      [rejected]: (state, action) => {
+        state.loading = false;
+        if (action.error) {
+          state.error = action.error.message;
+        }
+      },
+    };
+  }
+
+  function getMoreProducts() {
+    var { pending, fulfilled, rejected } = extraActions.getMoreProducts;
+    return {
+      [pending]: (state) => {
+        state.loading = false;
+      },
+      [fulfilled]: (state, action) => {
+        state.loading = false;
+        if (action.payload.data.error) {
+          state.error = action.payload.data.error;
+        } else {
+          state.value = [...state.value, ...action.payload.data.products];
+          if (
+            action.payload.data.count <=
+            state.page * state.limit + state.limit
+          ) {
+            state.full = true;
+          }
+          state.page++;
         }
       },
       [rejected]: (state, action) => {

@@ -9,7 +9,6 @@ import Loader from "./loader";
 
 const StyledProducts = styled.div`
   width: 100%;
-  min-height: 100%;
   display: flex;
   nav {
     width: 200px;
@@ -35,28 +34,58 @@ const StyledProducts = styled.div`
       display: flex;
       flex-wrap: wrap;
     }
+
+    .loadMore {
+      color: green;
+      background-color: white;
+      margin: 30px 0;
+      padding: 10px;
+      border: none;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 `;
 
 function Products({ category }) {
   const products = useSelector((state) => state.products.value);
+  const full = useSelector((state) => state.products.full);
   const loading = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
   const types = useSelector((state) => state.types.value);
   const [type, setType] = useState("");
+  const [options, setOptions] = useState();
   const dispatch = useDispatch();
+
+  const handleLoadMoreProducts = () => {
+    dispatch(productsActions.getMoreProducts(options));
+  };
 
   return (
     <StyledProducts>
       <div className="container">
-        <Search category={category} />
+        <Search category={category} setOptions={setOptions} />
         {loading && <Loader />}
         {products && !loading && (
-          <section className="products">
-            {products?.map((product) => {
-              return <ProductPreview key={product._id} product={product} />;
-            })}
-          </section>
+          <>
+            <section className="products">
+              {products?.map((product) => {
+                return <ProductPreview key={product._id} product={product} />;
+              })}
+            </section>
+            <button
+              className={"loadMore"}
+              onClick={() => handleLoadMoreProducts()}
+              hidden={full}
+            >
+              Voir plus
+            </button>
+          </>
         )}
       </div>
     </StyledProducts>
