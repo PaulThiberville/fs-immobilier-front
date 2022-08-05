@@ -11,7 +11,7 @@ export default function configureAppStore() {
       types: typesReducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(handleStatus),
+      getDefaultMiddleware().concat(handleTokenExpiration, handleStatus),
   });
   return store;
 }
@@ -20,6 +20,15 @@ const handleStatus = (store) => (next) => (action) => {
   let nextAction = next(action);
   if (action.payload?.status === 401) {
     console.log("Received 401");
+    nextAction = next(store.dispatch(userActions.logout()));
+  }
+  return nextAction;
+};
+
+const handleTokenExpiration = (store) => (next) => (action) => {
+  let nextAction = next(action);
+  if (store.getState().user?.value?.expiresAt <= Date.now()) {
+    console.log("Session expired");
     nextAction = next(store.dispatch(userActions.logout()));
   }
   return nextAction;
