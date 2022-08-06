@@ -1,7 +1,13 @@
+import { Helmet } from "react-helmet";
+
 function NoPage() {
   return (
     <div>
-      <h1>Il n'y a rien ici...</h1>
+      <Helmet>
+        <title>FS Immobilier - 404 </title>
+        <meta name="description" content="Cette page n'existe pas." />
+      </Helmet>
+      <h1>Cette page n'existe pas.</h1>
     </div>
   );
 }

@@ -5,6 +5,9 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { typesActions } from "../features/types";
+import { Helmet } from "react-helmet";
+import Button from "../components/Button";
+import Input from "../components/Input";
 
 const StyledCreateCategory = styled.main`
   width: 100%;
@@ -12,10 +15,9 @@ const StyledCreateCategory = styled.main`
   flex-direction: column;
   align-items: center;
   padding-bottom: 50px;
-  h1 {
-    margin: 30px;
-  }
   form {
+    margin: 30px 0;
+    background-color: white;
     padding: 30px;
     width: 100%;
     max-width: 500px;
@@ -24,50 +26,11 @@ const StyledCreateCategory = styled.main`
     gap: 10px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    label {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-
-      input {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid green;
-      }
-
-      input {
-        height: 30px;
-      }
-    }
-    p {
-      height: 30px;
-    }
     div {
       display: flex;
       gap: 10px;
       width: 100%;
       justify-content: center;
-      button {
-        background-color: white;
-        border: none;
-        height: 30px;
-        width: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        * {
-          color: green;
-        }
-
-        &:hover {
-          cursor: pointer;
-          background-color: green;
-          * {
-            color: white;
-          }
-        }
-      }
     }
   }
 `;
@@ -108,32 +71,33 @@ function CreateType() {
 
   return (
     <StyledCreateCategory>
-      <h1>Créer un type de bien :</h1>
+      <Helmet>
+        <title>FS Immobilier - Ajouter un type de bien </title>
+        <meta name="description" content="Ajouter un type de bien" />
+      </Helmet>
       <form>
-        <label>
-          Nouveau type:
-          <input
-            type={"text"}
-            onChange={(e) => setType(e.target.value)}
-            value={type}
-          />
-        </label>
+        <Input
+          type={"text"}
+          onChange={(e) => setType(e.target.value)}
+          placeholder={"Nouveau Type"}
+          value={type}
+        />
         <p></p>
         <div>
-          <button
+          <Button
             onClick={(e) => {
               handleCreateType(e);
             }}
           >
             <FontAwesomeIcon icon={faCheck} />
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={(e) => {
               navigate("/dashboard");
             }}
           >
             <FontAwesomeIcon icon={faCancel} />
-          </button>
+          </Button>
         </div>
       </form>
     </StyledCreateCategory>

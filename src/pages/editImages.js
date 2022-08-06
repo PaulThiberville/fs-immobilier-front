@@ -3,50 +3,31 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { productsActions } from "../features/products";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardImage from "../components/dashboardImage";
 import Loader from "../components/loader";
+import { Helmet } from "react-helmet";
+import Button from "../components/Button";
+import { productActions } from "../features/product";
 
 const StyledEditImages = styled.main`
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 50px;
-  div {
+  margin: 50px;
+  .buttons-container {
     display: flex;
     gap: 10px;
-    width: 100%;
     justify-content: center;
-    button {
-      background-color: white;
-      border: none;
-      height: 30px;
-      width: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      * {
-        color: green;
-      }
-
-      &:hover {
-        cursor: pointer;
-        background-color: green;
-        * {
-          color: white;
-        }
-      }
-    }
   }
 `;
 
 const Images = styled.div`
-  width: 100%;
+  background-color: white;
+  padding: 10px;
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 10px;
   img {
     height: 100px;
@@ -78,14 +59,14 @@ function EditImages() {
   const [newImages, setNewImages] = useState([]);
   const { id } = useParams();
   const user = useSelector((state) => state.user.value);
-  const product = useSelector((state) => state.products.value[0]);
-  const loading = useSelector((state) => state.products.loading);
-  const error = useSelector((state) => state.products.error);
+  const product = useSelector((state) => state.product.value);
+  const loading = useSelector((state) => state.product.loading);
+  const error = useSelector((state) => state.product.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(productsActions.getProduct(id));
+    dispatch(productActions.getProduct(id));
   }, []);
 
   const onInput = (e) => {
@@ -163,15 +144,18 @@ function EditImages() {
   };
 
   const handleRemoveImage = (imageId) => {
-    dispatch(productsActions.removeImage({ user, imageId }));
+    dispatch(productActions.removeImage({ user, imageId }));
   };
 
-  if (error) return <p>Error: {error}</p>;
-  if (loading) return <Loader />;
-  if (product)
-    return (
-      <StyledEditImages>
-        <h1>Images du produit :</h1>
+  return (
+    <StyledEditImages>
+      <Helmet>
+        <title>FS Immobilier - Editer les images </title>
+        <meta name="description" content="Editer les images" />
+      </Helmet>
+      {error && <p>Error: {error}</p>}
+      {loading && <Loader />}
+      {product && !loading && (
         <Images>
           <FileLabel htmlFor="file" key={"fl"}>
             <div>
@@ -203,20 +187,22 @@ function EditImages() {
             );
           })}
         </Images>
-        <div>
-          <button onClick={() => handleSaveNewImages()}>
-            <FontAwesomeIcon icon={faCheck} />
-          </button>
-          <button
-            onClick={(e) => {
-              navigate("/dashboard");
-            }}
-          >
-            <FontAwesomeIcon icon={faCancel} />
-          </button>
-        </div>
-      </StyledEditImages>
-    );
+      )}
+
+      <div className="buttons-container">
+        <Button onClick={() => handleSaveNewImages()}>
+          <FontAwesomeIcon icon={faCheck} />
+        </Button>
+        <Button
+          onClick={(e) => {
+            navigate("/dashboard");
+          }}
+        >
+          <FontAwesomeIcon icon={faCancel} />
+        </Button>
+      </div>
+    </StyledEditImages>
+  );
 }
 
 export default EditImages;

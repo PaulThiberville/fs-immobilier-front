@@ -5,15 +5,18 @@ import { useEffect, useState } from "react";
 import { typesActions } from "../features/types";
 import { productsActions } from "../features/products";
 import { citiesActions } from "../features/cities";
-import { EmailJSResponseStatus } from "@emailjs/browser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import Button from "./Button";
+import Input from "./Input";
+import Select from "./Select";
 
 const StyledSearch = styled.form`
-  margin: 10px;
-  padding: 30px 0;
-  background-color: green;
+  margin-top: 10px;
   .container {
     width: 100%;
-    max-width: 320px;
+    width: 100%;
+    max-width: 400px;
     margin: 0 auto;
     padding: 10px;
     display: flex;
@@ -26,20 +29,13 @@ const StyledSearch = styled.form`
       width: 100%;
       display: flex;
       gap: 10px;
-      input {
-        width: 50px;
-        padding-left: 5px;
-      }
-
       * {
+        width: 50px;
         flex-grow: 1;
-        height: 30px;
-        border: none;
       }
     }
-
     button {
-      padding: 10px;
+      width: 100%;
     }
   }
 `;
@@ -90,12 +86,12 @@ function Search({ category, setOptions }) {
       <StyledSearch>
         <div className="container">
           <fieldset>
-            <input
+            <Input
               list="cities"
               type={"text"}
               placeholder={"Ville"}
               onChange={(e) => setCity(e.target.value)}
-            ></input>
+            ></Input>
             <datalist id="cities">
               {cities?.map((aCity, index) => {
                 return <option key={index} value={aCity} />;
@@ -103,19 +99,19 @@ function Search({ category, setOptions }) {
             </datalist>
           </fieldset>
           <fieldset>
-            <input
+            <Input
               type={"number"}
               placeholder={"Surface"}
               onChange={(e) => setSurface(e.target.value)}
-            ></input>
-            <input
+            ></Input>
+            <Input
               type={"number"}
               placeholder={"Pieces"}
               onChange={(e) => setRooms(e.target.value)}
-            ></input>
+            ></Input>
           </fieldset>
           <fieldset>
-            <select onChange={(e) => setType(e.target.value)}>
+            <Select onChange={(e) => setType(e.target.value)}>
               <option key={"0"} value={""}>
                 Type
               </option>
@@ -124,14 +120,17 @@ function Search({ category, setOptions }) {
                   {aType.value}
                 </option>
               ))}
-            </select>
-            <input
+            </Select>
+            <Input
               type={"number"}
               placeholder={"Budget"}
               onChange={(e) => setPrice(e.target.value)}
-            ></input>
+            ></Input>
           </fieldset>
-          <button onClick={(e) => handleSearch(e)}>Search</button>
+          <Button onClick={(e) => handleSearch(e)}>
+            <FontAwesomeIcon icon={faSearch} />
+            Search
+          </Button>
         </div>
       </StyledSearch>
     </>

@@ -7,19 +7,26 @@ const StyledLoader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  div {
+    background-color: white;
+    border-radius: 50%;
+    padding: 5px;
+  }
 `;
 
 function Loader() {
   return (
     <StyledLoader>
-      <TailSpin
-        height="80"
-        width="80"
-        radius="9"
-        color="green"
-        ariaLabel="tail-spin-loading"
-        wrapperStyle
-      />
+      <div>
+        <TailSpin
+          height="80"
+          width="80"
+          radius="9"
+          color="green"
+          ariaLabel="tail-spin-loading"
+          wrapperStyle
+        />
+      </div>
     </StyledLoader>
   );
 }

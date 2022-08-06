@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { citiesReducer } from "../features/cities";
+import { productReducer } from "../features/product";
 import { productsReducer } from "../features/products";
 import { typesReducer } from "../features/types";
 import { userActions, userReducer } from "../features/user";
@@ -8,6 +9,7 @@ export default function configureAppStore() {
   const store = configureStore({
     reducer: {
       products: productsReducer,
+      product: productReducer,
       user: userReducer,
       types: typesReducer,
       cities: citiesReducer,

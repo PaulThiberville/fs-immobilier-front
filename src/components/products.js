@@ -37,7 +37,7 @@ const StyledProducts = styled.div`
 
     .loadMore {
       color: green;
-      background-color: white;
+      background-color: transparent;
       margin: 30px 0;
       padding: 10px;
       border: none;
@@ -69,7 +69,7 @@ function Products({ category }) {
   return (
     <StyledProducts>
       <div className="container">
-        <Search category={category} setOptions={setOptions} />
+        <Search category={category} setOptions={() => setOptions} />
         {loading && <Loader />}
         {products && !loading && (
           <>

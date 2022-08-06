@@ -46,11 +46,8 @@ function createExtraActions() {
   return {
     getProducts: getProducts(),
     getMoreProducts: getMoreProducts(),
-    getProduct: getProduct(),
     addProduct: addProduct(),
     removeProduct: removeProduct(),
-    editProduct: editProduct(),
-    removeImage: removeImage(),
   };
 
   function getProducts() {
@@ -83,7 +80,7 @@ function createExtraActions() {
         const state = getState();
         const newOptions = {
           ...options,
-          offset: state.products.limit * state.products.page,
+          offset: state.products.limit * state.products.page + 1,
           limit: state.products.limit,
         };
         const response = await fetch(baseUrl + "/product/search/", {
@@ -99,19 +96,6 @@ function createExtraActions() {
     );
   }
 
-  function getProduct() {
-    return createAsyncThunk(`${name}/getProduct`, async (productId) => {
-      const response = await fetch(baseUrl + "/product/" + productId, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      return { status: response.status, data: await response.json() };
-    });
-  }
-
   function addProduct() {
     return createAsyncThunk(`${name}/addProduct`, async ({ user, product }) => {
       const response = await fetch(baseUrl + "/product/", {
@@ -125,24 +109,6 @@ function createExtraActions() {
       });
       return { status: response.status, data: await response.json() };
     });
-  }
-
-  function editProduct() {
-    return createAsyncThunk(
-      `${name}/editProduct`,
-      async ({ user, product, productId }) => {
-        const response = await fetch(baseUrl + "/product/" + productId, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-          body: JSON.stringify(product),
-        });
-        return { status: response.status, data: await response.json() };
-      }
-    );
   }
 
   function removeProduct() {
@@ -161,34 +127,14 @@ function createExtraActions() {
       }
     );
   }
-
-  function removeImage() {
-    return createAsyncThunk(
-      `${name}/removeImage`,
-      async ({ user, imageId }) => {
-        const response = await fetch(baseUrl + "/image/" + imageId, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-        });
-        return { status: response.status, data: await response.json() };
-      }
-    );
-  }
 }
 
 function createExtraReducers() {
   return {
     ...getProducts(),
-    ...getProduct(),
+    ...getMoreProducts(),
     ...addProduct(),
     ...removeProduct(),
-    ...editProduct(),
-    ...removeImage(),
-    ...getMoreProducts(),
   };
 
   function getProducts() {
@@ -251,30 +197,6 @@ function createExtraReducers() {
     };
   }
 
-  function getProduct() {
-    var { pending, fulfilled, rejected } = extraActions.getProduct;
-    return {
-      [pending]: (state) => {
-        state.loading = true;
-      },
-      [fulfilled]: (state, action) => {
-        state.loading = false;
-        if (action.payload.data.error) {
-          state.error = action.payload.data.error;
-        } else {
-          state.value = [action.payload.data];
-          state.error = "";
-        }
-      },
-      [rejected]: (state, action) => {
-        state.loading = false;
-        if (action.error) {
-          state.error = action.error.message;
-        }
-      },
-    };
-  }
-
   function addProduct() {
     var { pending, fulfilled, rejected } = extraActions.addProduct;
     return {
@@ -287,34 +209,6 @@ function createExtraReducers() {
           state.error = action.payload.data.error;
         } else {
           state.value = [...state.value, action.payload.data];
-        }
-      },
-      [rejected]: (state, action) => {
-        state.loading = false;
-        if (action.error) {
-          state.error = action.error.message;
-        }
-      },
-    };
-  }
-
-  function editProduct() {
-    var { pending, fulfilled, rejected } = extraActions.editProduct;
-    return {
-      [pending]: (state) => {
-        state.loading = true;
-      },
-      [fulfilled]: (state, action) => {
-        state.loading = false;
-        if (action.payload.data.error) {
-          state.error = action.payload.data.error;
-        } else {
-          state.value = [...state.value].map((product) => {
-            if (product._id === action.payload.data._id) {
-              return action.payload.data;
-            }
-            return product;
-          });
         }
       },
       [rejected]: (state, action) => {
@@ -339,34 +233,6 @@ function createExtraReducers() {
         } else {
           state.value = [...state.value].filter((product) => {
             return product._id !== action.payload.data._id;
-          });
-        }
-      },
-      [rejected]: (state, action) => {
-        state.loading = false;
-        if (action.error) {
-          state.error = action.error.message;
-        }
-      },
-    };
-  }
-
-  function removeImage() {
-    var { pending, fulfilled, rejected } = extraActions.removeImage;
-    return {
-      [pending]: (state) => {
-        state.loading = true;
-      },
-      [fulfilled]: (state, action) => {
-        state.loading = false;
-        if (action.payload.data.error) {
-          state.error = action.payload.data.error;
-        } else {
-          state.value = [...state.value].map((product) => {
-            if (product._id === action.payload.data._id) {
-              return action.payload.data;
-            }
-            return product;
           });
         }
       },

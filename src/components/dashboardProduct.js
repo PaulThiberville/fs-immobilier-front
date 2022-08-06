@@ -12,7 +12,7 @@ const StyledDashboardProduct = styled.article`
   flex-direction: column;
   gap: 10px;
   border-bottom: 1px solid green;
-  border-left: 5px solid green;
+  background-color: white;
   .actions {
     display: flex;
     gap: 10px;

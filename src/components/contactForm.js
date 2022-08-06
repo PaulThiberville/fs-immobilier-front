@@ -3,39 +3,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import emailjs from "@emailjs/browser";
 import { useRef, useState } from "react";
-import { productsActions } from "../features/products";
+import Button from "./Button";
+import Input from "./Input";
+import TextArea from "./TextArea";
 
 const StyledContactForm = styled.section`
   width: 100%;
-  max-width: 500px;
-  margin: 30px auto;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  padding: 10px;
+  margin-bottom: 50px;
   form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    input,
-    textarea,
-    button {
-      border: none;
-      background-color: white;
-      padding: 10px;
-      line-height: 30px;
-    }
-
-    button {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      justify-content: center;
-    }
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   p {
     font-size: 22px;
-    color: white;
+    text-align: center;
+    width: 100%center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-top: 10px;
   }
 `;
 
@@ -65,34 +59,34 @@ function ContactForm({ productId }) {
     <StyledContactForm>
       <p>
         Vous souhaitez nous contacter au sujet de ce bien ? Remplissez le
-        formulaire ci-dessous et nous vous contacterons.
+        formulaire ci-dessous et nous vous répondrons rapidement.
       </p>
       <form ref={form} onSubmit={handleSendEmail}>
-        <input type={"test"} placeholder={"Votre nom"} name="name"></input>
+        <Input type={"text"} placeholder={"Votre nom"} name="name"></Input>
         <p></p>
-        <input
+        <Input
           type={"email"}
           placeholder={"Email: example@email.com"}
           name="mail"
-        ></input>
+        ></Input>
         <p></p>
-        <textarea
+        <TextArea
           placeholder="Ajoutez un message ici"
           rows={5}
           name="message"
-        ></textarea>
+        ></TextArea>
         <p></p>
-        <input
+        <Input
           type={"text"}
           hidden={true}
           name="productId"
           value={productId}
           readOnly={true}
-        ></input>
-        <button onClick={(e) => handleSendEmail(e)}>
+        ></Input>
+        <Button onClick={(e) => handleSendEmail(e)}>
           <FontAwesomeIcon icon={faPaperPlane} />
           Envoyer
-        </button>
+        </Button>
       </form>
     </StyledContactForm>
   );

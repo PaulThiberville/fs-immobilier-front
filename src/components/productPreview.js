@@ -20,6 +20,7 @@ const StyledProductPreview = styled.article`
   flex-direction: column;
   animation: ${fadeIn} 0.5s linear;
   .container {
+    background-color: white;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -43,6 +44,14 @@ const StyledProductPreview = styled.article`
         white-space: pre-wrap;
       }
     }
+  }
+
+  @media only screen and (max-width: 1024px) {
+    width: 50%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
   }
 `;
 

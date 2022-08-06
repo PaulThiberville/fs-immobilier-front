@@ -9,7 +9,8 @@ const StyledHeader = styled.header`
   justify-content: space-between;
   align-items: center;
   background-color: white;
-
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 0 10px;
   img {
     height: 50px;
     width: 50px;
@@ -18,15 +19,36 @@ const StyledHeader = styled.header`
 
   nav {
     display: flex;
+    background-color: white;
     a {
       width: 100px;
-      height: 50px;
+      height: 70px;
+      border-bottom: 5px solid white;
       display: flex;
       align-items: center;
       justify-content: center;
 
       p {
         color: green;
+      }
+
+      &:hover {
+        border-bottom: 5px solid green;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    flex-direction: column;
+    img {
+      margin-top: 10px;
+    }
+    nav {
+      width: 100%;
+      gap: 10px;
+      display: flex;
+      a {
+        flex-grow: 1;
       }
     }
   }

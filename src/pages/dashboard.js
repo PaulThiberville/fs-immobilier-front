@@ -9,13 +9,14 @@ import DashboardProduct from "../components/dashboardProduct";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import Loader from "../components/loader";
+import { Helmet } from "react-helmet";
 
 const StyledDashboard = styled.main`
   min-height: 100%;
   width: 100%;
   display: flex;
   gap: 10px;
-  padding: 10px 0;
+  padding: 10px;
 
   nav {
     display: flex;
@@ -33,6 +34,8 @@ const StyledDashboard = styled.main`
       justify-content: flex-start;
       padding-left: 10px;
       gap: 10px;
+      border-bottom: 1px solid green;
+      border-left: 5px solid green;
 
       * {
         color: green;
@@ -85,6 +88,10 @@ function Dashboard() {
 
   return (
     <StyledDashboard>
+      <Helmet>
+        <title>FS Immobilier - Dashboard </title>
+        <meta name="description" content="Dashboard" />
+      </Helmet>
       <nav>
         <Link to={"/create/product"}>
           <FontAwesomeIcon icon={faAdd} />

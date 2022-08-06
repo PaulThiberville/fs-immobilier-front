@@ -4,9 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faCancel } from "@fortawesome/free-solid-svg-icons";
-import { productsActions } from "../features/products";
 import { typesActions } from "../features/types";
 import Loader from "../components/loader";
+import { Helmet } from "react-helmet";
+import Button from "../components/Button";
+import Select from "../components/Select";
+import TextArea from "../components/TextArea";
+import Input from "../components/Input";
+import { productActions } from "../features/product";
 
 const StyledEditProduct = styled.main`
   width: 100%;
@@ -19,6 +24,8 @@ const StyledEditProduct = styled.main`
     margin: 30px;
   }
   form {
+    margin: 30px 0;
+    background-color: white;
     padding: 30px;
     width: 100%;
     max-width: 500px;
@@ -27,53 +34,11 @@ const StyledEditProduct = styled.main`
     gap: 10px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    label {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid green;
-      }
-
-      input,
-      select {
-        height: 30px;
-      }
-    }
-    p {
-      height: 30px;
-    }
     div {
       display: flex;
       gap: 10px;
       width: 100%;
       justify-content: center;
-      button {
-        background-color: white;
-        border: none;
-        height: 30px;
-        width: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        * {
-          color: green;
-        }
-
-        &:hover {
-          cursor: pointer;
-          background-color: green;
-          * {
-            color: white;
-          }
-        }
-      }
     }
   }
 `;
@@ -81,9 +46,9 @@ const StyledEditProduct = styled.main`
 function EditProduct() {
   const { id } = useParams();
   const user = useSelector((state) => state.user.value);
-  const product = useSelector((state) => state.products.value[0]);
-  const loading = useSelector((state) => state.products.loading);
-  const error = useSelector((state) => state.products.error);
+  const product = useSelector((state) => state.product.value);
+  const loading = useSelector((state) => state.product.loading);
+  const error = useSelector((state) => state.product.error);
   const types = useSelector((state) => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -102,25 +67,27 @@ function EditProduct() {
   });
 
   useEffect(() => {
-    dispatch(productsActions.getProduct(id));
+    dispatch(productActions.getProduct(id));
     dispatch(typesActions.getTypes());
   }, []);
 
   useEffect(() => {
-    setType(product.type);
-    setCategory(product.category);
-    setDescription(product.description);
-    setPrice(product.price);
-    setCity(product.city);
-    setSurface(product.surface);
-    setRooms(product.rooms);
+    if (product) {
+      setType(product.type);
+      setCategory(product.category);
+      setDescription(product.description);
+      setPrice(product.price);
+      setCity(product.city);
+      setSurface(product.surface);
+      setRooms(product.rooms);
+    }
   }, [product]);
 
   const handleEditProduct = (e) => {
     e.preventDefault();
     if (inputValidity() && product) {
       dispatch(
-        productsActions.editProduct({
+        productActions.editProduct({
           user,
           product: {
             type,
@@ -154,90 +121,80 @@ function EditProduct() {
   if (product)
     return (
       <StyledEditProduct>
-        <h1>Editer un produit :</h1>
+        <Helmet>
+          <title>FS Immobilier - Editer le produit </title>
+          <meta name="description" content="Editer le produit" />
+        </Helmet>
         <form>
-          <label>
-            Categorie:
-            <select onChange={(e) => setCategory(e.target.value)} value={type}>
-              <option value={"buy"}>Achat</option>
-              <option value={"rent"}>Location</option>
-            </select>
-          </label>
-          <label>
-            Type:
-            <select onChange={(e) => setType(e.target.value)} value={type}>
-              <option value={""}>--Choisir--</option>
-              {types?.map((aType) => {
-                return (
-                  <option key={aType._id} value={aType.value}>
-                    {aType.value}
-                  </option>
-                );
-              })}
-            </select>
-          </label>
+          <Select onChange={(e) => setCategory(e.target.value)} value={type}>
+            <option value={"buy"}>Achat</option>
+            <option value={"rent"}>Location</option>
+            <option value="">--Categorie--</option>
+          </Select>
+          <Select onChange={(e) => setType(e.target.value)} value={type}>
+            <option value={""}>--Type--</option>
+            {types?.map((aType) => {
+              return (
+                <option key={aType._id} value={aType.value}>
+                  {aType.value}
+                </option>
+              );
+            })}
+          </Select>
           <p></p>
-          <label>
-            Description:
-            <textarea
-              type={"text"}
-              rows={5}
-              onChange={(e) => setDescription(e.target.value)}
-              value={description}
-            />
-          </label>
+          Description:
+          <TextArea
+            type={"text"}
+            rows={5}
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            placeholder={"Description"}
+          />
           <p></p>
-          <label>
-            Prix:
-            <input
-              type={"number"}
-              onChange={(e) => setPrice(e.target.value)}
-              value={price}
-            />
-          </label>
+          Prix:
+          <Input
+            type={"number"}
+            onChange={(e) => setPrice(e.target.value)}
+            value={price}
+            placeholder={"Prix"}
+          />
           <p></p>
-          <label>
-            Ville:
-            <input
-              type={"text"}
-              onChange={(e) => setCity(e.target.value)}
-              value={city}
-            />
-          </label>
+          <Input
+            type={"text"}
+            onChange={(e) => setCity(e.target.value)}
+            value={city}
+            placeholder={"Ville"}
+          />
           <p></p>
-          <label>
-            Surface:
-            <input
-              type={"number"}
-              onChange={(e) => setSurface(e.target.value)}
-              value={surface}
-            />
-          </label>
+          <Input
+            type={"number"}
+            onChange={(e) => setSurface(e.target.value)}
+            value={surface}
+            placeholder={"Surface"}
+          />
           <p></p>
-          <label>
-            Pieces:
-            <input
-              type={"number"}
-              onChange={(e) => setRooms(e.target.value)}
-              value={rooms}
-            />
-          </label>
+          <Input
+            type={"number"}
+            onChange={(e) => setRooms(e.target.value)}
+            value={rooms}
+            placeholder={"Pieces"}
+          />
           <p></p>
           <div>
-            <button
+            <Button
               onClick={(e) => {
                 handleEditProduct(e);
               }}
             >
               <FontAwesomeIcon icon={faCheck} />
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={(e) => {
                 navigate("/dashboard");
               }}
             >
               <FontAwesomeIcon icon={faCancel} />
-            </button>
+            </Button>
           </div>
         </form>
       </StyledEditProduct>
