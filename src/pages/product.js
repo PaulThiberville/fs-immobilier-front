@@ -16,6 +16,7 @@ const StyledProduct = styled.main`
     padding: 10px;
     background-color: white;
     margin-top: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
   .gallery-container {
     height: 600px;
@@ -24,19 +25,19 @@ const StyledProduct = styled.main`
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   }
   .infos-container {
-    width: 50%;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     .first-line {
       display: flex;
-      justify-content: space-between;
-      strong,
-      p {
-        font-size: 25px;
+      gap: 10px;
+      align-items: center;
+      .info {
+        font-size: 22px;
       }
-      h2 {
+      .price {
         font-size: 30px;
       }
     }
@@ -44,6 +45,7 @@ const StyledProduct = styled.main`
     .description {
       white-space: pre-wrap;
       flex-grow: 1;
+      width: 100%;
       overflow-y: scroll;
       margin: 30px 0;
     }
@@ -92,10 +94,14 @@ function Product() {
         <Helmet>
           <title>
             {"FS Immobilier - " +
+              product.type +
+              " à " +
               product.city +
-              " /" +
+              " / " +
               product.surface +
-              "m2 /" +
+              "m2 / " +
+              product.rooms +
+              "pieces / " +
               product.price +
               " €"}
           </title>
@@ -107,10 +113,10 @@ function Product() {
           </div>
           <div className="infos-container">
             <p className="first-line">
-              <strong>{product.city}</strong>
-              <p>{product.surface + " m2"}</p>
-              <p>{product.rooms + " pieces"}</p>
-              <h2>{product.price + " €"}</h2>
+              <p className="info">{product.type + " à " + product.city}</p>
+              <p className="info">{product.surface + " m2"}</p>
+              <p className="info">{product.rooms + " pieces"}</p>
+              <p className="price">{product.price + " €"}</p>
             </p>
             <p className="description">{product.description}</p>
             <p>

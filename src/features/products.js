@@ -148,7 +148,6 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          console.log("count:", action.payload.data.count);
           if (action.payload.data.count <= state.limit) {
             state.full = true;
           } else {
