@@ -98,22 +98,22 @@ function Product() {
   if (product)
     return (
       <StyledProduct>
-        <Helmet>
-          <title>
-            {"FS Immobilier - " +
-              product.type +
-              " à " +
-              product.city +
-              " / " +
-              product.surface +
-              "m2 / " +
-              product.rooms +
-              "pieces / " +
-              product.price +
-              " €"}
-          </title>
-          <meta name="description" content={product.description} />
-        </Helmet>
+        <Helmet
+          title={
+            "FS Immobilier - " +
+            product.type +
+            " à " +
+            product.city +
+            " / " +
+            product.surface +
+            "m2 / " +
+            product.rooms +
+            "pieces / " +
+            product.price +
+            " €"
+          }
+          meta={[{ name: "description", content: product.description }]}
+        />
         <section className="product-container">
           <div className="gallery-container">
             <Gallery images={product.images} type={"full"} />
