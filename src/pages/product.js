@@ -83,17 +83,6 @@ function Product() {
   const error = useSelector((state) => state.product.loading);
   const dispatch = useDispatch();
 
-  //useEffect(() => {
-  //  const getProduct = async () => {
-  //    const res = await fetch(
-  //      "https://fs-immobilier-api.herokuapp.com/product/" + id
-  //    );
-  //    const prod = await res.json();
-  //    setProduct(prod);
-  //  };
-  //  getProduct();
-  //}, []);
-
   useEffect(() => {
     dispatch(productActions.getProduct(id));
   }, []);
@@ -117,7 +106,25 @@ function Product() {
             product.price +
             " €"
           }
-          meta={[{ name: "description", content: product.description }]}
+          meta={[
+            { name: "description", content: product.description },
+            {
+              name: "og:title",
+              content:
+                "FS Immobilier - " +
+                product.type +
+                " à " +
+                product.city +
+                " / " +
+                product.surface +
+                "m2 / " +
+                product.rooms +
+                "pieces / " +
+                product.price +
+                " €",
+            },
+            { name: "og:description", content: product.description },
+          ]}
         />
         <section className="product-container">
           <div className="gallery-container">
