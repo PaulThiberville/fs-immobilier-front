@@ -109,7 +109,7 @@ function Product() {
           meta={[
             { name: "description", content: product.description },
             {
-              name: "og:title",
+              property: "og:title",
               content:
                 "FS Immobilier - " +
                 product.type +
@@ -123,7 +123,7 @@ function Product() {
                 product.price +
                 " €",
             },
-            { name: "og:description", content: product.description },
+            { property: "og:description", content: product.description },
           ]}
         />
         <section className="product-container">
