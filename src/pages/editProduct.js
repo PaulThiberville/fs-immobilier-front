@@ -12,6 +12,7 @@ import Select from "../components/Select";
 import TextArea from "../components/TextArea";
 import Input from "../components/Input";
 import { productActions } from "../features/product";
+import { productsActions } from "../features/products";
 
 const StyledEditProduct = styled.main`
   width: 100%;
@@ -45,11 +46,11 @@ const StyledEditProduct = styled.main`
 
 function EditProduct() {
   const { id } = useParams();
-  const user = useSelector((state) => state.user.value);
-  const product = useSelector((state) => state.product.value);
-  const loading = useSelector((state) => state.product.loading);
-  const error = useSelector((state) => state.product.error);
-  const types = useSelector((state) => state.types.value);
+  const user = useSelector(state => state.user.value);
+  const product = useSelector(state => state.product.value);
+  const loading = useSelector(state => state.product.loading);
+  const error = useSelector(state => state.product.error);
+  const types = useSelector(state => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [type, setType] = useState("");
@@ -83,7 +84,7 @@ function EditProduct() {
     }
   }, [product]);
 
-  const handleEditProduct = (e) => {
+  const handleEditProduct = e => {
     e.preventDefault();
     if (inputValidity() && product) {
       dispatch(
@@ -101,6 +102,7 @@ function EditProduct() {
           productId: product._id,
         })
       );
+      dispatch(productsActions.getAllProducts());
       navigate("/dashboard");
     }
   };
@@ -126,14 +128,14 @@ function EditProduct() {
           <meta name="description" content="Editer le produit" />
         </Helmet>
         <form>
-          <Select onChange={(e) => setCategory(e.target.value)} value={type}>
+          <Select onChange={e => setCategory(e.target.value)} value={type}>
             <option value={"buy"}>Achat</option>
             <option value={"rent"}>Location</option>
             <option value="">--Categorie--</option>
           </Select>
-          <Select onChange={(e) => setType(e.target.value)} value={type}>
+          <Select onChange={e => setType(e.target.value)} value={type}>
             <option value={""}>--Type--</option>
-            {types?.map((aType) => {
+            {types?.map(aType => {
               return (
                 <option key={aType._id} value={aType.value}>
                   {aType.value}
@@ -146,7 +148,7 @@ function EditProduct() {
           <TextArea
             type={"text"}
             rows={5}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
             value={description}
             placeholder={"Description"}
           />
@@ -154,42 +156,42 @@ function EditProduct() {
           Prix:
           <Input
             type={"number"}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
             value={price}
             placeholder={"Prix"}
           />
           <p></p>
           <Input
             type={"text"}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={e => setCity(e.target.value)}
             value={city}
             placeholder={"Ville"}
           />
           <p></p>
           <Input
             type={"number"}
-            onChange={(e) => setSurface(e.target.value)}
+            onChange={e => setSurface(e.target.value)}
             value={surface}
             placeholder={"Surface"}
           />
           <p></p>
           <Input
             type={"number"}
-            onChange={(e) => setRooms(e.target.value)}
+            onChange={e => setRooms(e.target.value)}
             value={rooms}
             placeholder={"Pieces"}
           />
           <p></p>
           <div>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 handleEditProduct(e);
               }}
             >
               <FontAwesomeIcon icon={faCheck} />
             </Button>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 navigate("/dashboard");
               }}
             >

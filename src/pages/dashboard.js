@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import Loader from "../components/loader";
 import { Helmet } from "react-helmet";
+import { DashboardSearch } from "../components/dashboardSearch";
 
 const StyledDashboard = styled.main`
   min-height: 100%;
@@ -63,10 +64,10 @@ const StyledDashboard = styled.main`
 `;
 
 function Dashboard() {
-  const user = useSelector((state) => state.user.value);
-  const products = useSelector((state) => state.products.value);
-  const error = useSelector((state) => state.products.error);
-  const loading = useSelector((state) => state.products.loading);
+  const user = useSelector(state => state.user.value);
+  const products = useSelector(state => state.products.value);
+  const error = useSelector(state => state.products.error);
+  const loading = useSelector(state => state.products.loading);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -82,7 +83,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (user) {
-      dispatch(productsActions.getProducts());
+      dispatch(productsActions.getAllProducts());
     }
   }, []);
 
@@ -106,15 +107,18 @@ function Dashboard() {
           <p>Se deconnecter</p>
         </button>
       </nav>
-      {loading === true && <Loader />}
-      {error === true && <p>Error: {error}</p>}
-      {products && loading === false && (
+      <section>
+        {loading === true && <Loader />}
+        {error === true && <p>Error: {error}</p>}
         <section>
-          {products.map((product) => {
-            return <DashboardProduct key={product._id} product={product} />;
-          })}
+          <DashboardSearch />
+          {products &&
+            loading === false &&
+            products.map(product => {
+              return <DashboardProduct key={product._id} product={product} />;
+            })}
         </section>
-      )}
+      </section>
     </StyledDashboard>
   );
 }

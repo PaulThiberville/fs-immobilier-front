@@ -26,7 +26,7 @@ function createInitialState() {
 
 function createReducers() {
   return {
-    clear: (state) => {
+    clear: state => {
       state.value = undefined;
     },
   };
@@ -40,8 +40,7 @@ function createExtraActions() {
   };
 
   function getCities() {
-    return createAsyncThunk(`${name}/getCities`, async (input) => {
-      console.log("getcities");
+    return createAsyncThunk(`${name}/getCities`, async input => {
       const response = await fetch(baseUrl + "/cities/" + input);
       return { status: response.status, data: await response.json() };
     });
@@ -56,7 +55,7 @@ function createExtraReducers() {
   function getCities() {
     var { pending, fulfilled, rejected } = extraActions.getCities;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {

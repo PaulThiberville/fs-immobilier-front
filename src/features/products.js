@@ -29,7 +29,7 @@ function createInitialState() {
 
 function createReducers() {
   return {
-    reinit: (state) => {
+    reinit: state => {
       state.value = undefined;
       state.page = 0;
       state.limit = 6;
@@ -46,6 +46,7 @@ function createExtraActions() {
   return {
     getProducts: getProducts(),
     getMoreProducts: getMoreProducts(),
+    getAllProducts: getAllProducts(),
     addProduct: addProduct(),
     removeProduct: removeProduct(),
   };
@@ -96,6 +97,13 @@ function createExtraActions() {
     );
   }
 
+  function getAllProducts() {
+    return createAsyncThunk(`${name}/getAllProducts`, async () => {
+      const response = await fetch(baseUrl + "/product/");
+      return { status: response.status, data: await response.json() };
+    });
+  }
+
   function addProduct() {
     return createAsyncThunk(`${name}/addProduct`, async ({ user, product }) => {
       const response = await fetch(baseUrl + "/product/", {
@@ -133,6 +141,7 @@ function createExtraReducers() {
   return {
     ...getProducts(),
     ...getMoreProducts(),
+    ...getAllProducts(),
     ...addProduct(),
     ...removeProduct(),
   };
@@ -140,7 +149,7 @@ function createExtraReducers() {
   function getProducts() {
     var { pending, fulfilled, rejected } = extraActions.getProducts;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -155,6 +164,7 @@ function createExtraReducers() {
           }
           state.value = [...action.payload.data.products];
           state.page++;
+          state.error = "";
         }
       },
       [rejected]: (state, action) => {
@@ -169,7 +179,7 @@ function createExtraReducers() {
   function getMoreProducts() {
     var { pending, fulfilled, rejected } = extraActions.getMoreProducts;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = false;
       },
       [fulfilled]: (state, action) => {
@@ -196,10 +206,36 @@ function createExtraReducers() {
     };
   }
 
+  function getAllProducts() {
+    var { pending, fulfilled, rejected } = extraActions.getAllProducts;
+    return {
+      [pending]: state => {
+        state.loading = true;
+      },
+      [fulfilled]: (state, action) => {
+        state.loading = false;
+        if (action.payload.data.error) {
+          state.error = action.payload.data.error;
+        } else {
+          state.value = [...action.payload.data];
+          state.page = 0;
+          state.offset = 0;
+          state.error = "";
+        }
+      },
+      [rejected]: (state, action) => {
+        state.loading = false;
+        if (action.error) {
+          state.error = action.error.message;
+        }
+      },
+    };
+  }
+
   function addProduct() {
     var { pending, fulfilled, rejected } = extraActions.addProduct;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -222,7 +258,7 @@ function createExtraReducers() {
   function removeProduct() {
     var { pending, fulfilled, rejected } = extraActions.removeProduct;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -230,7 +266,7 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = [...state.value].filter((product) => {
+          state.value = [...state.value].filter(product => {
             return product._id !== action.payload.data._id;
           });
         }

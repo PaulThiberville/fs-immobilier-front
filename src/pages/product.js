@@ -29,6 +29,7 @@ const StyledProduct = styled.main`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 10px;
 
     .first-line {
       display: flex;
@@ -78,9 +79,9 @@ const StyledProduct = styled.main`
 function Product() {
   const { id } = useParams();
   //const [product, setProduct] = useState();
-  const product = useSelector((state) => state.product.value);
-  const loading = useSelector((state) => state.product.loading);
-  const error = useSelector((state) => state.product.loading);
+  const product = useSelector(state => state.product.value);
+  const loading = useSelector(state => state.product.loading);
+  const error = useSelector(state => state.product.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -96,13 +97,13 @@ function Product() {
           title={
             "FS Immobilier - " +
             product.type +
-            " à " +
+            " | " +
             product.city +
-            " / " +
+            " | " +
             product.surface +
-            "m2 / " +
+            " m² | " +
             product.rooms +
-            "pieces / " +
+            "pieces | " +
             product.price +
             " €"
           }
@@ -113,13 +114,13 @@ function Product() {
               content:
                 "FS Immobilier - " +
                 product.type +
-                " à " +
+                " | " +
                 product.city +
-                " / " +
+                " | " +
                 product.surface +
-                "m2 / " +
+                " m² | " +
                 product.rooms +
-                "pieces / " +
+                "pieces | " +
                 product.price +
                 " €",
             },
@@ -132,11 +133,11 @@ function Product() {
           </div>
           <div className="infos-container">
             <p className="first-line">
-              <p className="info">{product.type + " à " + product.city}</p>
-              <p className="info">{product.surface + " m2"}</p>
+              <p className="info">{product.type + " | " + product.city}</p>
+              <p className="info">{product.surface + " m² | "}</p>
               <p className="info">{product.rooms + " pieces"}</p>
-              <p className="price">{product.price + " €"}</p>
             </p>
+            <h2 className="price">{product.price + " €"}</h2>
             <p className="description">{product.description}</p>
             <p>
               Publié le :{" "}

@@ -52,12 +52,18 @@ const StyledProducts = styled.div`
   }
 `;
 
+const NothingFound = styled.p`
+  width: max-content;
+  padding: 50px;
+  margin: auto;
+`;
+
 function Products({ category }) {
-  const products = useSelector((state) => state.products.value);
-  const full = useSelector((state) => state.products.full);
-  const loading = useSelector((state) => state.products.loading);
-  const error = useSelector((state) => state.products.error);
-  const types = useSelector((state) => state.types.value);
+  const products = useSelector(state => state.products.value);
+  const full = useSelector(state => state.products.full);
+  const loading = useSelector(state => state.products.loading);
+  const error = useSelector(state => state.products.error);
+  const types = useSelector(state => state.types.value);
   const [type, setType] = useState("");
   const [options, setOptions] = useState();
   const dispatch = useDispatch();
@@ -74,9 +80,13 @@ function Products({ category }) {
         {products && !loading && (
           <>
             <section className="products">
-              {products?.map((product) => {
-                return <ProductPreview key={product._id} product={product} />;
-              })}
+              {products[0] ? (
+                products.map(product => {
+                  return <ProductPreview key={product._id} product={product} />;
+                })
+              ) : (
+                <NothingFound>Aucun bien n'a été trouvé</NothingFound>
+              )}
             </section>
             <button
               className={"loadMore"}

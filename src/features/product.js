@@ -26,7 +26,7 @@ function createInitialState() {
 
 function createReducers() {
   return {
-    clear: (state) => {
+    clear: state => {
       state.value = undefined;
       state.loading = false;
       state.error = "";
@@ -44,7 +44,7 @@ function createExtraActions() {
   };
 
   function getProduct() {
-    return createAsyncThunk(`${name}/getProduct`, async (productId) => {
+    return createAsyncThunk(`${name}/getProduct`, async productId => {
       const response = await fetch(baseUrl + "/product/" + productId);
       return { status: response.status, data: await response.json() };
     });
@@ -96,7 +96,7 @@ function createExtraReducers() {
   function getProduct() {
     var { pending, fulfilled, rejected } = extraActions.getProduct;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -120,7 +120,7 @@ function createExtraReducers() {
   function editProduct() {
     var { pending, fulfilled, rejected } = extraActions.editProduct;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -128,12 +128,7 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = [...state.value].map((product) => {
-            if (product._id === action.payload.data._id) {
-              return action.payload.data;
-            }
-            return product;
-          });
+          state.value = action.payload.data;
         }
       },
       [rejected]: (state, action) => {
@@ -148,7 +143,7 @@ function createExtraReducers() {
   function removeImage() {
     var { pending, fulfilled, rejected } = extraActions.removeImage;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -156,12 +151,8 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = [...state.value].map((product) => {
-            if (product._id === action.payload.data._id) {
-              return action.payload.data;
-            }
-            return product;
-          });
+          console.log("response:", action.payload.data);
+          state.value = action.payload.data;
         }
       },
       [rejected]: (state, action) => {

@@ -35,6 +35,13 @@ const StyledProductPreview = styled.article`
       flex-direction: column;
       flex-grow: 1;
       width: 100%;
+      strong {
+        font-weight: bold;
+      }
+      h2 {
+        font-size: 18px;
+        font-weight: bold;
+      }
       .description {
         height: 100px;
         width: 100%;
@@ -63,9 +70,10 @@ function ProductPreview({ product }) {
           <Gallery images={product.images} type={"full"} />
         </div>
         <Link className="infos" to={"/product/" + product._id}>
-          <p>{product.city}</p>
-          <p>{product.rooms + " pieces"}</p>
-          <p>{product.price + " €"}</p>
+          <strong>{`${product.city} | ${product.rooms + " pieces"} | ${
+            product.surface + " m²"
+          }`}</strong>
+          <h2>{product.price + " €"}</h2>
           <p className="description">{product.description}</p>
         </Link>
       </div>

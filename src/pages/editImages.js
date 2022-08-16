@@ -58,10 +58,10 @@ const FileLabel = styled.label`
 function EditImages() {
   const [newImages, setNewImages] = useState([]);
   const { id } = useParams();
-  const user = useSelector((state) => state.user.value);
-  const product = useSelector((state) => state.product.value);
-  const loading = useSelector((state) => state.product.loading);
-  const error = useSelector((state) => state.product.error);
+  const user = useSelector(state => state.user.value);
+  const product = useSelector(state => state.product.value);
+  const loading = useSelector(state => state.product.loading);
+  const error = useSelector(state => state.product.error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ function EditImages() {
     dispatch(productActions.getProduct(id));
   }, []);
 
-  const onInput = (e) => {
+  const onInput = e => {
     if (e.target.files && e.target.files.length > 0) {
       setNewImages([...newImages, ...e.target.files]);
       e.target.value = null;
@@ -80,7 +80,6 @@ function EditImages() {
     let imagesToSave = [];
     for (let i = 0; i < newImages.length; i++) {
       const imgbbImage = await uploadImage(newImages[i]);
-      console.log(imgbbImage);
       if (imgbbImage.success === true) {
         imagesToSave = [
           ...imagesToSave,
@@ -91,7 +90,6 @@ function EditImages() {
           },
         ];
         if (i === newImages.length - 1) {
-          console.log("Images to Save : ", imagesToSave);
           await saveImages(imagesToSave);
           navigate("/dashboard");
         }
@@ -99,8 +97,7 @@ function EditImages() {
     }
   };
 
-  const uploadImage = async (image) => {
-    console.log("save : ", image);
+  const uploadImage = async image => {
     var formData = new FormData();
     formData.append("image", image);
     const response = await fetch(
@@ -113,7 +110,7 @@ function EditImages() {
     if (response.ok) return await response.json();
   };
 
-  const saveImages = async (imagesToSave) => {
+  const saveImages = async imagesToSave => {
     const response = await fetch(
       process.env.REACT_APP_API_URL + "/image/" + product._id,
       {
@@ -126,24 +123,20 @@ function EditImages() {
         body: JSON.stringify(imagesToSave),
       }
     );
-    if (response.ok) console.log("save response :", await response.json());
-    else {
-      console.log("save error :", await response.json());
-    }
   };
 
-  const handleRemoveNewImage = async (imageToDelete) => {
+  const handleRemoveNewImage = async imageToDelete => {
     const response = await fetch(imageToDelete.delete_url);
     if (response.ok) {
       setNewImages(
-        [...newImages].filter((image) => {
+        [...newImages].filter(image => {
           return image !== imageToDelete;
         })
       );
     }
   };
 
-  const handleRemoveImage = (imageId) => {
+  const handleRemoveImage = imageId => {
     dispatch(productActions.removeImage({ user, imageId }));
   };
 
@@ -168,7 +161,7 @@ function EditImages() {
               accept="image/png, image/jpg, image/gif, image/jpeg"
             />
           </FileLabel>
-          {product.images.map((image) => {
+          {product.images.map(image => {
             return (
               <DashboardImage
                 key={image._id}
@@ -194,7 +187,7 @@ function EditImages() {
           <FontAwesomeIcon icon={faCheck} />
         </Button>
         <Button
-          onClick={(e) => {
+          onClick={e => {
             navigate("/dashboard");
           }}
         >
