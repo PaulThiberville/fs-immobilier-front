@@ -55,7 +55,7 @@ const StyledHeader = styled.header`
 `;
 
 function Layout() {
-  const user = useSelector((state) => state.user.value);
+  const user = useSelector(state => state.user.value);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -81,6 +81,9 @@ function Layout() {
           </Link>
           <Link to={"/rent"}>
             <p>Louer</p>
+          </Link>
+          <Link to={"/submit"}>
+            <p>Proposer</p>
           </Link>
           {user && (
             <>

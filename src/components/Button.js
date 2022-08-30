@@ -33,6 +33,13 @@ const Button = styled.button`
       color: white;
     }
   }
+
+  &:disabled {
+    color: grey;
+    * {
+      color: grey;
+    }
+  }
 `;
 
 export default Button;

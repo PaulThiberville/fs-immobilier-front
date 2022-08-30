@@ -12,6 +12,7 @@ import Button from "../components/Button";
 import Select from "../components/Select";
 import TextArea from "../components/TextArea";
 import Input from "../components/Input";
+import { Form } from "../components/form";
 
 const StyledCreateProduct = styled.main`
   width: 100%;
@@ -23,32 +24,13 @@ const StyledCreateProduct = styled.main`
   h1 {
     margin: 30px;
   }
-
-  form {
-    background-color: white;
-    margin: 30px 0;
-    padding: 30px;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    div {
-      display: flex;
-      gap: 10px;
-      width: 100%;
-      justify-content: center;
-    }
-  }
 `;
 
 function CreateProduct() {
-  const user = useSelector((state) => state.user.value);
-  const loading = useSelector((state) => state.types.loading);
-  const products = useSelector((state) => state.products.value);
-  const types = useSelector((state) => state.types.value);
+  const user = useSelector(state => state.user.value);
+  const loading = useSelector(state => state.types.loading);
+  const products = useSelector(state => state.products.value);
+  const types = useSelector(state => state.types.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [type, setType] = useState("");
@@ -76,7 +58,7 @@ function CreateProduct() {
     }
   }, [products]);
 
-  const handleCreateProduct = (e) => {
+  const handleCreateProduct = e => {
     e.preventDefault();
     if (inputValidity()) {
       dispatch(
@@ -116,16 +98,16 @@ function CreateProduct() {
       </Helmet>
       {loading === true && <Loader />}
       {loading === false && (
-        <form>
-          <Select onChange={(e) => setCategory(e.target.value)} value={type}>
+        <Form>
+          <Select onChange={e => setCategory(e.target.value)} value={type}>
             <option value={""}>--Categorie--</option>
             <option value={"buy"}>Achat</option>
             <option value={"rent"}>Location</option>
           </Select>
           <p></p>
-          <Select onChange={(e) => setType(e.target.value)} value={type}>
+          <Select onChange={e => setType(e.target.value)} value={type}>
             <option value={""}>--Type--</option>
-            {types?.map((aType) => {
+            {types?.map(aType => {
               return (
                 <option key={aType._id} value={aType.value}>
                   {aType.value}
@@ -135,57 +117,62 @@ function CreateProduct() {
           </Select>
           <p></p>
           <TextArea
+            title="Description"
             rows={5}
             placeholder={"Description"}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
             value={description}
           />
           <p></p>
           <Input
+            title="Prix"
             type={"number"}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
             value={price}
             placeholder={"Prix"}
           />
           <p></p>
           <Input
+            title="Ville"
             type={"text"}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={e => setCity(e.target.value)}
             value={city}
             placeholder={"Ville"}
           />
           <p></p>
           <Input
+            title="Surface en m²"
             type={"number"}
-            onChange={(e) => setSurface(e.target.value)}
+            onChange={e => setSurface(e.target.value)}
             value={surface}
             placeholder={"Surface"}
           />
           <p></p>
           <Input
+            title="Nombre de pieces"
             type={"number"}
-            onChange={(e) => setRooms(e.target.value)}
+            onChange={e => setRooms(e.target.value)}
             value={rooms}
             placeholder={"Pieces"}
           />
           <p></p>
           <div>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 handleCreateProduct(e);
               }}
             >
               <FontAwesomeIcon icon={faCheck} />
             </Button>
             <Button
-              onClick={(e) => {
+              onClick={e => {
                 navigate("/dashboard");
               }}
             >
               <FontAwesomeIcon icon={faCancel} />
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     </StyledCreateProduct>
   );

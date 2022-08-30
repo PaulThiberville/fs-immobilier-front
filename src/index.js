@@ -23,6 +23,7 @@ import EditProduct from "./pages/editProduct";
 import EditImages from "./pages/editImages";
 import Product from "./pages/product";
 import CreateType from "./pages/createType";
+import Submit from "./pages/submit";
 
 const store = configureAppStore();
 
@@ -35,6 +36,7 @@ root.render(
           <Route index element={<Home />} />
           <Route path="buy/" element={<Buy />} />
           <Route path="rent/" element={<Rent />} />
+          <Route path="submit/" element={<Submit />} />
           <Route path="product/:id" element={<Product />} />
           <Route path="login/" element={<Login />} />
           <Route path="dashboard/" element={<Dashboard />} />

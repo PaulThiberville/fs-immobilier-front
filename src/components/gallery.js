@@ -66,12 +66,10 @@ function Gallery({ images, type }) {
   ]);
 
   useEffect(() => {
-    if (images) {
-      if (images[0]) {
-        setDisplayables(images);
-      }
+    if (images[0]) {
+      setDisplayables(images);
     }
-  }, []);
+  });
 
   const handleNext = () => {
     if (selectedIndex === displaybles.length - 1) {
@@ -92,8 +90,10 @@ function Gallery({ images, type }) {
       <img
         src={
           type === "full"
-            ? displaybles[selectedIndex].url
-            : displaybles[selectedIndex].thumbnail_url
+            ? displaybles[selectedIndex].url ||
+              URL.createObjectURL(displaybles[selectedIndex])
+            : displaybles[selectedIndex].thumbnail_url ||
+              URL.createObjectURL(displaybles[selectedIndex])
         }
         alt={displaybles[selectedIndex].url}
       />

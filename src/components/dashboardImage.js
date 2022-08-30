@@ -25,6 +25,7 @@ const StyledDashboardImage = styled.article`
     }
     * {
       color: white;
+      cursor: pointer;
     }
   }
 `;
