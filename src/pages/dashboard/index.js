@@ -2,18 +2,14 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { userActions } from "../features/user";
-import { productsActions } from "../features/products";
 import styled from "styled-components";
-import DashboardProduct from "../components/dashboardProduct";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd, faPowerOff } from "@fortawesome/free-solid-svg-icons";
-import Loader from "../components/loader";
 import { Helmet } from "react-helmet";
-import { DashboardSearch } from "../components/dashboardSearch";
+import { userActions } from "../../features/user";
+import { ProductTable } from "./components/productsTable";
 
 const StyledDashboard = styled.main`
-  min-height: 100%;
   width: 100%;
   display: flex;
   gap: 10px;
@@ -53,14 +49,6 @@ const StyledDashboard = styled.main`
       }
     }
   }
-
-  section {
-    height: 100%;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
 `;
 
 function Dashboard() {
@@ -80,12 +68,6 @@ function Dashboard() {
       navigate("/login");
     }
   });
-
-  useEffect(() => {
-    if (user) {
-      dispatch(productsActions.getAllProducts());
-    }
-  }, []);
 
   return (
     <StyledDashboard>
@@ -107,18 +89,7 @@ function Dashboard() {
           <p>Se deconnecter</p>
         </button>
       </nav>
-      <section>
-        {loading === true && <Loader />}
-        {error === true && <p>Error: {error}</p>}
-        <section>
-          <DashboardSearch />
-          {products &&
-            loading === false &&
-            products.map(product => {
-              return <DashboardProduct key={product._id} product={product} />;
-            })}
-        </section>
-      </section>
+      <ProductTable />
     </StyledDashboard>
   );
 }

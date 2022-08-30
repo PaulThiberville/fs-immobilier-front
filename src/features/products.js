@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { customFetch } from "../utils/customFetch";
 
 // create slice
 
@@ -41,8 +42,8 @@ function createReducers() {
 }
 
 function createExtraActions() {
-  const baseUrl = process.env.REACT_APP_API_URL;
-
+  //const baseUrl = process.env.REACT_APP_API_URL;
+  const baseUrl = "http://localhost:5000";
   return {
     getProducts: getProducts(),
     getMoreProducts: getMoreProducts(),
@@ -99,8 +100,7 @@ function createExtraActions() {
 
   function getAllProducts() {
     return createAsyncThunk(`${name}/getAllProducts`, async () => {
-      const response = await fetch(baseUrl + "/product/");
-      return { status: response.status, data: await response.json() };
+      return customFetch({ route: "/product/search", verb: "POST", data: {} });
     });
   }
 
@@ -214,20 +214,14 @@ function createExtraReducers() {
       },
       [fulfilled]: (state, action) => {
         state.loading = false;
-        if (action.payload.data.error) {
-          state.error = action.payload.data.error;
-        } else {
-          state.value = [...action.payload.data];
-          state.page = 0;
-          state.offset = 0;
-          state.error = "";
+        if (action.payload.data.products) {
+          state.value = action.payload.data.products;
         }
+        console.log("fullfiled :", action.payload.data);
       },
       [rejected]: (state, action) => {
         state.loading = false;
-        if (action.error) {
-          state.error = action.error.message;
-        }
+        console.log("rejected :", action.payload.data);
       },
     };
   }

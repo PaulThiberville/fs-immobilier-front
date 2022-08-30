@@ -30,7 +30,6 @@ const StyledSearch = styled.form`
       display: flex;
       gap: 10px;
       * {
-        width: 50px;
         flex-grow: 1;
       }
     }
@@ -41,8 +40,8 @@ const StyledSearch = styled.form`
 `;
 
 function Search({ category, setOptions }) {
-  const types = useSelector((state) => state.types.value);
-  const cities = useSelector((state) => state.cities.value);
+  const types = useSelector(state => state.types.value);
+  const cities = useSelector(state => state.cities.value);
   const [city, setCity] = useState("");
   const [price, setPrice] = useState(0);
   const [surface, setSurface] = useState(0);
@@ -56,7 +55,7 @@ function Search({ category, setOptions }) {
     setOptions({ category });
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     e.preventDefault();
     dispatch(productsActions.reinit());
     const options = {};
@@ -90,7 +89,7 @@ function Search({ category, setOptions }) {
               list="cities"
               type={"text"}
               placeholder={"Ville"}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={e => setCity(e.target.value)}
             ></Input>
             <datalist id="cities">
               {cities?.map((aCity, index) => {
@@ -102,20 +101,20 @@ function Search({ category, setOptions }) {
             <Input
               type={"number"}
               placeholder={"Surface"}
-              onChange={(e) => setSurface(e.target.value)}
+              onChange={e => setSurface(e.target.value)}
             ></Input>
             <Input
               type={"number"}
               placeholder={"Pieces"}
-              onChange={(e) => setRooms(e.target.value)}
+              onChange={e => setRooms(e.target.value)}
             ></Input>
           </fieldset>
           <fieldset>
-            <Select onChange={(e) => setType(e.target.value)}>
+            <Select onChange={e => setType(e.target.value)}>
               <option key={"0"} value={""}>
                 Type
               </option>
-              {types?.map((aType) => (
+              {types?.map(aType => (
                 <option key={aType._id} value={aType.value}>
                   {aType.value}
                 </option>
@@ -124,10 +123,10 @@ function Search({ category, setOptions }) {
             <Input
               type={"number"}
               placeholder={"Budget"}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={e => setPrice(e.target.value)}
             ></Input>
           </fieldset>
-          <Button onClick={(e) => handleSearch(e)}>
+          <Button onClick={e => handleSearch(e)}>
             <FontAwesomeIcon icon={faSearch} />
             Search
           </Button>

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { customFetch } from "../utils/customFetch";
 
 // create slice
 
@@ -45,8 +46,7 @@ function createExtraActions() {
 
   function getProduct() {
     return createAsyncThunk(`${name}/getProduct`, async productId => {
-      const response = await fetch(baseUrl + "/product/" + productId);
-      return { status: response.status, data: await response.json() };
+      return await customFetch({ route: "/product/" + productId });
     });
   }
 
@@ -54,16 +54,12 @@ function createExtraActions() {
     return createAsyncThunk(
       `${name}/editProduct`,
       async ({ user, product, productId }) => {
-        const response = await fetch(baseUrl + "/product/" + productId, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
-          body: JSON.stringify(product),
+        return await customFetch({
+          route: "/product/" + productId,
+          verb: "PUT",
+          data: product,
+          token: user.token,
         });
-        return { status: response.status, data: await response.json() };
       }
     );
   }
