@@ -8,7 +8,6 @@ const StyledPipe = styled.div`
 
 const Container = styled.div`
   display: ${props => (props.type === "desktop" ? "flex" : "none")};
-
   @media only screen and (max-width: 500px) {
     display: ${props =>
       props.type === "mobile" && props.currentIndex === props.index
@@ -64,18 +63,6 @@ const Step = styled.div`
   }
 `;
 
-const Buttons = styled.div`
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 16px 0;
-  @media only screen and (max-width: 500px) {
-    display: none;
-  }
-`;
-
 export default function Pipe({ steps }) {
   const [index, setIndex] = useState(1);
   const [step, setStep] = useState(null);
@@ -117,17 +104,6 @@ export default function Pipe({ steps }) {
           {steps.find(step => step.index === index).component}
         </Container>
       }
-      <Buttons>
-        <Button onClick={() => setIndex(index - 1)} disabled={index <= 1}>
-          Retour
-        </Button>
-        <Button
-          onClick={() => setIndex(index + 1)}
-          disabled={index >= steps.length}
-        >
-          Suivant
-        </Button>
-      </Buttons>
     </StyledPipe>
   );
 }

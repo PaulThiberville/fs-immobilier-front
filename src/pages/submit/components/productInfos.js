@@ -158,7 +158,9 @@ export default function ProductInfos() {
           value={type.value}
           error={type.error}
         >
-          <option value={""}>--Type--</option>
+          <option key={"default"} value={""}>
+            --Type--
+          </option>
           {types?.map(aType => {
             return (
               <option key={aType._id} value={aType.value}>

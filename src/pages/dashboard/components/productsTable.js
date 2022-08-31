@@ -1,4 +1,3 @@
-import DashboardProduct from "../../../components/dashboardProduct";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import styled from "styled-components";
@@ -17,8 +16,9 @@ const StyledProductTable = styled.section`
   gap: 8px;
   min-height: 300px;
   img {
-    height: 100px;
-    width: 100px;
+    height: 72px;
+    width: 72px;
+    margin: 8px;
     object-fit: cover;
   }
 
@@ -91,9 +91,7 @@ export function ProductTable() {
       return (
         <tr>
           <td align={"center"}>
-            <img
-              src={product.images[0]?.thumbnail_url || "/no_image.png"}
-            ></img>
+            <img src={product.images[0]?.thumb_url || "/no_image.png"}></img>
           </td>
           <td align={"center"}>
             <Status status={product.status} />
@@ -122,6 +120,7 @@ export function ProductTable() {
 
   useEffect(() => {
     buildTable();
+    console.log(products);
   }, [products]);
 
   return (
@@ -149,8 +148,3 @@ export function ProductTable() {
     </StyledProductTable>
   );
 }
-//{products &&
-//    loading === false &&
-//    products.map(product => {
-//      return <DashboardProduct key={product._id} product={product} />;
-//    })}

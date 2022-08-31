@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { ImagesInfos } from "./components/imagesInfos";
 import { ProductInfos } from "./components/productInfos";
-import { UserInfos } from "./components/userInfos";
+import { GeneralInfos } from "./components/generalInfos";
 import { useState } from "react";
 
 const StyledFullProduct = styled.section`
@@ -29,8 +29,8 @@ const Tab = styled.div`
 `;
 
 const tabs = [
-  { name: "Vendeur", component: <UserInfos /> },
-  { name: "Informations", component: <ProductInfos /> },
+  { name: "General", component: <GeneralInfos /> },
+  { name: "Produit", component: <ProductInfos /> },
   { name: "Images", component: <ImagesInfos /> },
 ];
 
