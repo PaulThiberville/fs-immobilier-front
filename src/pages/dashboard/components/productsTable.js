@@ -7,14 +7,15 @@ import { productsActions } from "../../../features/products";
 import { useState } from "react";
 import Button from "../../../components/Button";
 import Status from "../../../components/status";
+import { useNavigate } from "react-router-dom";
 
 const StyledProductTable = styled.section`
   background-color: white;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px;
+  gap: 8px;
+  min-height: 300px;
   img {
     height: 100px;
     width: 100px;
@@ -23,6 +24,7 @@ const StyledProductTable = styled.section`
 
   table {
     border-collapse: collapse;
+    margin: 8px;
     thead {
       th {
         padding: 16px 0;
@@ -44,12 +46,39 @@ const StyledProductTable = styled.section`
   }
 `;
 
+const Tabs = styled.nav`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  .filler {
+    flex-grow: 1;
+    border-bottom: 4px solid lightgray;
+  }
+`;
+
+const Tab = styled.div`
+  padding: 16px;
+  border-bottom: ${props =>
+    props.currentTab.name === props.tab.name
+      ? "4px solid green"
+      : "4px solid lightgray"};
+`;
+
+const tabs = [
+  { name: "Tout", search: {} },
+  { name: "Pending", search: { status: "pending" } },
+  { name: "Hidden", search: { status: "hidden" } },
+  { name: "Visible", search: { status: "visible" } },
+];
+
 export function ProductTable() {
   const products = useSelector(state => state.products.value);
   const error = useSelector(state => state.products.error);
   const loading = useSelector(state => state.products.loading);
   const [table, setTable] = useState({ rows: [], columns: null });
+  const [tab, setTab] = useState(tabs[0]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const buildTable = () => {
     const columns = ["Image", "Status", "Création", "Action"].map(
@@ -73,7 +102,11 @@ export function ProductTable() {
             {new Date(product.createdAt).toLocaleDateString("fr-FR")}
           </td>
           <td align={"center"}>
-            <Button>Edit</Button>
+            <Button
+              onClick={() => navigate("/dashboard/product/" + product._id)}
+            >
+              Edit
+            </Button>
           </td>
         </tr>
       );
@@ -84,8 +117,8 @@ export function ProductTable() {
   };
 
   useEffect(() => {
-    dispatch(productsActions.getAllProducts());
-  }, []);
+    dispatch(productsActions.getAllProducts(tab.search));
+  }, [tab]);
 
   useEffect(() => {
     buildTable();
@@ -93,14 +126,26 @@ export function ProductTable() {
 
   return (
     <StyledProductTable>
+      <Tabs>
+        {tabs.map((t, index) => {
+          return (
+            <Tab key={index} onClick={() => setTab(t)} currentTab={tab} tab={t}>
+              {t.name}
+            </Tab>
+          );
+        })}
+        <div className="filler" />
+      </Tabs>
       {loading === true && <Loader />}
       {error === true && <p>Error: {error}</p>}
-      <table>
-        <thead>
-          <tr>{table.columns}</tr>
-        </thead>
-        <tbody>{table.rows}</tbody>
-      </table>
+      {products && !loading && (
+        <table>
+          <thead>
+            <tr>{table.columns}</tr>
+          </thead>
+          <tbody>{table.rows}</tbody>
+        </table>
+      )}
     </StyledProductTable>
   );
 }

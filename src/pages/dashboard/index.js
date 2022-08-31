@@ -12,40 +12,40 @@ import { ProductTable } from "./components/productsTable";
 const StyledDashboard = styled.main`
   width: 100%;
   display: flex;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 8px;
+`;
 
-  nav {
+const DashboardNav = styled.nav`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  a,
+  button {
+    border: none;
+    height: 50px;
+    width: 300px;
+    background-color: white;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 8px;
+    gap: 8px;
+    border-bottom: 1px solid green;
+    border-left: 5px solid green;
 
-    a,
-    button {
-      border: none;
-      height: 50px;
-      width: 300px;
-      background-color: white;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding-left: 10px;
-      gap: 10px;
-      border-bottom: 1px solid green;
-      border-left: 5px solid green;
+    * {
+      color: green;
+      font-weight: bold;
+      font-size: 16px;
+    }
 
+    &:hover {
+      cursor: pointer;
+      background-color: green;
       * {
-        color: green;
-        font-weight: bold;
-        font-size: 16px;
-      }
-
-      &:hover {
-        cursor: pointer;
-        background-color: green;
-        * {
-          color: white;
-        }
+        color: white;
       }
     }
   }
@@ -75,7 +75,7 @@ function Dashboard() {
         <title>FS Immobilier - Dashboard </title>
         <meta name="description" content="Dashboard" />
       </Helmet>
-      <nav>
+      <DashboardNav>
         <Link to={"/create/product"}>
           <FontAwesomeIcon icon={faAdd} />
           <p>Ajouter un bien</p>
@@ -88,7 +88,7 @@ function Dashboard() {
           <FontAwesomeIcon icon={faPowerOff} />
           <p>Se deconnecter</p>
         </button>
-      </nav>
+      </DashboardNav>
       <ProductTable />
     </StyledDashboard>
   );

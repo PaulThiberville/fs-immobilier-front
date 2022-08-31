@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { customFetch } from "../utils/customFetch";
 
 // create slice
 
@@ -26,7 +27,7 @@ function createInitialState() {
 
 function createReducers() {
   return {
-    logout: (state) => {
+    logout: state => {
       localStorage.clear();
       state.value = undefined;
     },
@@ -44,16 +45,12 @@ function createExtraActions() {
   };
 
   function login() {
-    return createAsyncThunk(`${name}/login`, async (credentials) => {
-      const response = await fetch(baseUrl + "/user/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
+    return createAsyncThunk(`${name}/login`, async credentials => {
+      return customFetch({
+        route: "/user/login",
+        verb: "POST",
+        data: credentials,
       });
-      return { status: response.status, data: await response.json() };
     });
   }
 }
@@ -66,7 +63,7 @@ function createExtraReducers() {
   function login() {
     var { pending, fulfilled, rejected } = extraActions.login;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {

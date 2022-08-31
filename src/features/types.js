@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { customFetch } from "../utils/customFetch";
 
 // create slice
 
@@ -39,29 +40,17 @@ function createExtraActions() {
 
   function getTypes() {
     return createAsyncThunk(`${name}/getTypes`, async () => {
-      const response = await fetch(baseUrl + "/type/", {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      return { status: response.status, data: await response.json() };
+      return customFetch({ route: "/type/" });
     });
   }
 
   function addType() {
     return createAsyncThunk(`${name}/addType`, async ({ user, type }) => {
-      const response = await fetch(baseUrl + "/type/", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + user.token,
-        },
-        body: JSON.stringify({ value: type }),
+      return customFetch({
+        route: "/type/",
+        verb: "POST",
+        data: { value: type },
       });
-      return { status: response.status, data: await response.json() };
     });
   }
 
@@ -75,7 +64,11 @@ function createExtraActions() {
           Authorization: "Bearer " + user.token,
         },
       });
-      return { status: response.status, data: await response.json() };
+      return customFetch({
+        route: "/type/" + typeId,
+        verb: "DELETE",
+        token: user.token,
+      });
     });
   }
 }
@@ -90,7 +83,7 @@ function createExtraReducers() {
   function getTypes() {
     var { pending, fulfilled, rejected } = extraActions.getTypes;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -113,7 +106,7 @@ function createExtraReducers() {
   function addType() {
     var { pending, fulfilled, rejected } = extraActions.addType;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -136,7 +129,7 @@ function createExtraReducers() {
   function removeType() {
     var { pending, fulfilled, rejected } = extraActions.removeType;
     return {
-      [pending]: (state) => {
+      [pending]: state => {
         state.loading = true;
       },
       [fulfilled]: (state, action) => {
@@ -144,7 +137,7 @@ function createExtraReducers() {
         if (action.payload.data.error) {
           state.error = action.payload.data.error;
         } else {
-          state.value = [...state.value].filter((Type) => {
+          state.value = [...state.value].filter(Type => {
             return Type._id !== action.payload.data._id;
           });
         }

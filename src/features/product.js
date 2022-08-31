@@ -68,15 +68,11 @@ function createExtraActions() {
     return createAsyncThunk(
       `${name}/removeImage`,
       async ({ user, imageId }) => {
-        const response = await fetch(baseUrl + "/image/" + imageId, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
+        return customFetch({
+          route: "/image/" + imageId,
+          verb: "DELETE",
+          token: user.token,
         });
-        return { status: response.status, data: await response.json() };
       }
     );
   }

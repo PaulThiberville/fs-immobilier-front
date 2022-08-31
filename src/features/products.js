@@ -19,7 +19,7 @@ export const productsReducer = slice.reducer;
 
 function createInitialState() {
   return {
-    value: undefined,
+    value: [],
     page: 0,
     limit: 6,
     full: false,
@@ -42,8 +42,9 @@ function createReducers() {
 }
 
 function createExtraActions() {
-  //const baseUrl = process.env.REACT_APP_API_URL;
-  const baseUrl = "http://localhost:5000";
+  const baseUrl = process.env.REACT_APP_API_URL;
+  //const baseUrl = "http://localhost:5000";
+
   return {
     getProducts: getProducts(),
     getMoreProducts: getMoreProducts(),
@@ -62,15 +63,11 @@ function createExtraActions() {
           offset: 0,
           limit: state.products.limit,
         };
-        const response = await fetch(baseUrl + "/product/search/", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newOptions),
+        return customFetch({
+          route: "/product/search",
+          verb: "POST",
+          data: newOptions,
         });
-        return { status: response.status, data: await response.json() };
       }
     );
   }
@@ -85,37 +82,28 @@ function createExtraActions() {
           offset: state.products.limit * state.products.page + 1,
           limit: state.products.limit,
         };
-        const response = await fetch(baseUrl + "/product/search/", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newOptions),
+        return customFetch({
+          route: "/product/search",
+          verb: "POST",
+          data: newOptions,
         });
-        return { status: response.status, data: await response.json() };
       }
     );
   }
 
   function getAllProducts() {
-    return createAsyncThunk(`${name}/getAllProducts`, async () => {
-      return customFetch({ route: "/product/search", verb: "POST", data: {} });
+    return createAsyncThunk(`${name}/getAllProducts`, async options => {
+      return customFetch({
+        route: "/product/search",
+        verb: "POST",
+        data: options,
+      });
     });
   }
 
   function addProduct() {
-    return createAsyncThunk(`${name}/addProduct`, async ({ user, product }) => {
-      const response = await fetch(baseUrl + "/product/", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + user.token,
-        },
-        body: JSON.stringify(product),
-      });
-      return { status: response.status, data: await response.json() };
+    return createAsyncThunk(`${name}/addProduct`, async ({ product }) => {
+      return customFetch({ route: "/product/", verb: "POST", data: product });
     });
   }
 
@@ -123,15 +111,11 @@ function createExtraActions() {
     return createAsyncThunk(
       `${name}/removeProduct`,
       async ({ user, productId }) => {
-        const response = await fetch(baseUrl + "/product/" + productId, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + user.token,
-          },
+        return customFetch({
+          route: "/product/" + productId,
+          verb: "DELETE",
+          token: user.token,
         });
-        return { status: response.status, data: await response.json() };
       }
     );
   }

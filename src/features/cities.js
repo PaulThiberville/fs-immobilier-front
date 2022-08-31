@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { customFetch } from "../utils/customFetch";
 
 // create slice
 
@@ -41,8 +42,7 @@ function createExtraActions() {
 
   function getCities() {
     return createAsyncThunk(`${name}/getCities`, async input => {
-      const response = await fetch(baseUrl + "/cities/" + input);
-      return { status: response.status, data: await response.json() };
+      return customFetch({ route: "/cities/" + input });
     });
   }
 }

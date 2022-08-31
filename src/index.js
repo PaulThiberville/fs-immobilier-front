@@ -19,11 +19,11 @@ import NoPage from "./pages/noPage";
 import Dashboard from "./pages/dashboard";
 import CreateProduct from "./pages/createProduct";
 import Rent from "./pages/rent";
-import EditProduct from "./pages/editProduct";
 import EditImages from "./pages/editImages";
 import Product from "./pages/product";
 import CreateType from "./pages/createType";
 import Submit from "./pages/submit";
+import { FullProduct } from "./pages/dashboard/fullProduct/index.js";
 
 const store = configureAppStore();
 
@@ -42,7 +42,7 @@ root.render(
           <Route path="dashboard/" element={<Dashboard />} />
           <Route path="create/type" element={<CreateType />} />
           <Route path="create/product" element={<CreateProduct />} />
-          <Route path="edit/product/:id" element={<EditProduct />} />
+          <Route path="dashboard/product/:id" element={<FullProduct />} />
           <Route path="edit/images/:id" element={<EditImages />} />
           <Route path="*" element={<NoPage />} />
         </Route>

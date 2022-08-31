@@ -1,6 +1,6 @@
 export const customFetch = async ({ route, verb, data, token }) => {
-  //const baseUrl = process.env.REACT_APP_API_URL;
-  const baseUrl = "http://localhost:5000";
+  const baseUrl = process.env.REACT_APP_API_URL;
+  //const baseUrl = "http://localhost:5000";
   let output = { status: "", data: {} };
   try {
     const options = {
