@@ -21,6 +21,6 @@ export const customFetch = async ({ route, verb, data, token }) => {
     return output;
   } catch (error) {
     alert("Error on custom fetch : " + (error.message || "unknown error"));
-    return output;
+    return Promise.reject(error);
   }
 };

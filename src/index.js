@@ -17,9 +17,7 @@ import Home from "./pages/home";
 import Buy from "./pages/buy";
 import NoPage from "./pages/noPage";
 import Dashboard from "./pages/dashboard";
-import CreateProduct from "./pages/createProduct";
 import Rent from "./pages/rent";
-import EditImages from "./pages/editImages";
 import Product from "./pages/product";
 import CreateType from "./pages/createType";
 import Submit from "./pages/submit";
@@ -41,9 +39,7 @@ root.render(
           <Route path="login/" element={<Login />} />
           <Route path="dashboard/" element={<Dashboard />} />
           <Route path="create/type" element={<CreateType />} />
-          <Route path="create/product" element={<CreateProduct />} />
           <Route path="dashboard/product/:id" element={<FullProduct />} />
-          <Route path="edit/images/:id" element={<EditImages />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

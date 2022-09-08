@@ -76,10 +76,6 @@ function Dashboard() {
         <meta name="description" content="Dashboard" />
       </Helmet>
       <DashboardNav>
-        <Link to={"/create/product"}>
-          <FontAwesomeIcon icon={faAdd} />
-          <p>Ajouter un bien</p>
-        </Link>
         <Link to={"/create/type"}>
           <FontAwesomeIcon icon={faAdd} />
           <p>Ajouter un type de bien</p>

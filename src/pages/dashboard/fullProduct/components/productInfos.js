@@ -7,9 +7,23 @@ import { Form } from "../../../../components/form";
 import Select from "../../../../components/Select";
 import { typesActions } from "../../../../features/types";
 import TextArea from "../../../../components/TextArea";
+import Button from "../../../../components/Button";
+import styled from "styled-components";
+import { customFetch } from "../../../../utils/customFetch";
+import Loader from "../../../../components/loader";
+
+const Buttons = styled.div`
+  display: flex;
+  width: max-content;
+  gap: 8px;
+  margin-bottom: 32px;
+  margin-right: 32px;
+  margin-left: auto;
+`;
 
 export const ProductInfos = () => {
   const { id } = useParams();
+  const user = useSelector(state => state.user.value);
   const {
     value: product,
     loading,
@@ -74,7 +88,7 @@ export const ProductInfos = () => {
       return setErrors({ ...errors, price: "Doit être supperieur à 0." });
     }
     setProductInfos({ ...productInfos, price: e.target.value });
-    setErrors({ ...errors, city: "" });
+    setErrors({ ...errors, price: "" });
   };
 
   const handleSurfaceChanged = e => {
@@ -121,8 +135,19 @@ export const ProductInfos = () => {
 
   useEffect(() => {
     dispatch(typesActions.getTypes());
-    if (id) dispatch(productActions.getProduct(id));
+    dispatch(productActions.getProduct(id));
   }, []);
+
+  const handleSave = async e => {
+    e.preventDefault();
+    await customFetch({
+      route: "/product/" + id,
+      verb: "PUT",
+      data: productInfos,
+      token: user.token,
+    });
+    dispatch(productActions.getProduct(id));
+  };
 
   useEffect(() => {
     if (product?._id) {
@@ -132,6 +157,7 @@ export const ProductInfos = () => {
         city: product.city,
         price: product.price,
         surface: product.surface,
+        rooms: product.rooms,
         bedrooms: product.bedrooms,
         description: product.description,
       });
@@ -139,75 +165,87 @@ export const ProductInfos = () => {
   }, [product]);
 
   return (
-    <Form>
-      <Select
-        title="Categorie"
-        value={productInfos.category}
-        onChange={e => handleCategoryChanged(e)}
-        error={errors.category}
-      >
-        <option value={""}>--Categorie--</option>
-        <option value={"buy"}>Achat</option>
-        <option value={"rent"}>Location</option>
-      </Select>
-      <Select
-        title="Type"
-        value={productInfos.type}
-        onChange={e => handleTypeChanged(e)}
-        error={errors.type}
-      >
-        <option key={"default"} value={""}>
-          --Type--
-        </option>
-        {types?.map(type => {
-          return (
-            <option key={type._id} value={type.value}>
-              {type.value}
-            </option>
-          );
-        })}
-      </Select>
-      <Input
-        title="Ville"
-        type="text"
-        value={productInfos.city}
-        onChange={e => handleCityChanged(e)}
-        error={errors.city}
-      />
-      <Input
-        title="Prix"
-        type="number"
-        value={productInfos.price}
-        onChange={e => handlePriceChanged(e)}
-        error={errors.price}
-      />
-      <Input
-        title="Surface"
-        type="number"
-        value={productInfos.surface}
-        onChange={e => handleSurfaceChanged(e)}
-        error={errors.surface}
-      />
-      <Input
-        title="Pieces"
-        type="number"
-        value={productInfos.rooms}
-        onChange={e => handleRoomsChanged(e)}
-        error={errors.rooms}
-      />
-      <TextArea
-        title="Description"
-        value={productInfos.description}
-        onChange={e => handleDescriptionChanged(e)}
-        error={errors.description}
-      />
-      <Input
-        title="Chambres"
-        type="number"
-        value={productInfos.bedrooms}
-        onChange={e => handleBedroomsChanged(e)}
-        error={errors.bedrooms}
-      />
-    </Form>
+    <>
+      {loading && <Loader />}
+      {!loading && (
+        <>
+          <Form>
+            <Select
+              title="Categorie"
+              value={productInfos.category}
+              onChange={e => handleCategoryChanged(e)}
+              error={errors.category}
+            >
+              <option value={""}>--Categorie--</option>
+              <option value={"buy"}>Achat</option>
+              <option value={"rent"}>Location</option>
+            </Select>
+            <Select
+              title="Type"
+              value={productInfos.type}
+              onChange={e => handleTypeChanged(e)}
+              error={errors.type}
+            >
+              <option key={"default"} value={""}>
+                --Type--
+              </option>
+              {types?.map(type => {
+                return (
+                  <option key={type._id} value={type.value}>
+                    {type.value}
+                  </option>
+                );
+              })}
+            </Select>
+            <Input
+              title="Ville"
+              type="text"
+              value={productInfos.city}
+              onChange={e => handleCityChanged(e)}
+              error={errors.city}
+            />
+            <Input
+              title="Prix"
+              type="number"
+              value={productInfos.price}
+              onChange={e => handlePriceChanged(e)}
+              error={errors.price}
+            />
+            <Input
+              title="Surface"
+              type="number"
+              value={productInfos.surface}
+              onChange={e => handleSurfaceChanged(e)}
+              error={errors.surface}
+            />
+            <Input
+              title="Pieces"
+              type="number"
+              value={productInfos.rooms}
+              onChange={e => handleRoomsChanged(e)}
+              error={errors.rooms}
+            />
+            <TextArea
+              title="Description"
+              value={productInfos.description}
+              onChange={e => handleDescriptionChanged(e)}
+              error={errors.description}
+            />
+            <Input
+              title="Chambres"
+              type="number"
+              value={productInfos.bedrooms}
+              onChange={e => handleBedroomsChanged(e)}
+              error={errors.bedrooms}
+            />
+            <Buttons>
+              <Button disabled={loading} onClick={e => handleSave(e)}>
+                Sauvegarder
+              </Button>
+            </Buttons>
+          </Form>
+        </>
+      )}
+    </>
   );
 };

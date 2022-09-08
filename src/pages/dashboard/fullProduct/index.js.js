@@ -8,6 +8,7 @@ import { useState } from "react";
 const StyledFullProduct = styled.section`
   background-color: white;
   margin: 8px;
+  min-height: 300px;
 `;
 
 const Tabs = styled.nav`

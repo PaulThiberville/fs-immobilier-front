@@ -120,41 +120,45 @@ export const GeneralInfos = () => {
     <StyledGeneralInfos>
       {loading && <Loader />}
       {!loading && (
-        <Form>
-          <Input
-            title="Nom"
-            type="text"
-            value={generalInfos.name}
-            onChange={e => handleNameChanged(e)}
-            error={errors.name}
-          />
-          <Input
-            title="Email"
-            type="text"
-            value={generalInfos.email}
-            onChange={e => handleEmailChanged(e)}
-            error={errors.email}
-          />
-          <Select
-            title="Status"
-            value={generalInfos.status}
-            onChange={e => handleStatusChanged(e)}
-          >
-            <option value="pending">Pending</option>
-            <option value="hidden">Hidden</option>
-            <option value="visible">Visible</option>
-          </Select>
-        </Form>
+        <>
+          <Form>
+            <Input
+              title="Nom"
+              type="text"
+              value={generalInfos.name}
+              onChange={e => handleNameChanged(e)}
+              error={errors.name}
+            />
+            <Input
+              title="Email"
+              type="text"
+              value={generalInfos.email}
+              onChange={e => handleEmailChanged(e)}
+              error={errors.email}
+            />
+            <Select
+              title="Status"
+              value={generalInfos.status}
+              onChange={e => handleStatusChanged(e)}
+            >
+              <option value="pending">Pending</option>
+              <option value="hidden">Hidden</option>
+              <option value="visible">Visible</option>
+            </Select>
+          </Form>
+          <Buttons>
+            <Button
+              disabled={loading}
+              onClick={async () => await handleDelete()}
+            >
+              Supprimer
+            </Button>
+            <Button disabled={loading} onClick={async () => await handleSave()}>
+              Sauvegarder
+            </Button>
+          </Buttons>
+        </>
       )}
-
-      <Buttons>
-        <Button disabled={loading} onClick={async () => await handleDelete()}>
-          Delete
-        </Button>
-        <Button disabled={loading} onClick={async () => await handleSave()}>
-          Save
-        </Button>
-      </Buttons>
     </StyledGeneralInfos>
   );
 };

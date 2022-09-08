@@ -62,6 +62,7 @@ function createExtraActions() {
           ...options,
           offset: 0,
           limit: state.products.limit,
+          status: "visible",
         };
         return customFetch({
           route: "/product/search",
@@ -81,6 +82,7 @@ function createExtraActions() {
           ...options,
           offset: state.products.limit * state.products.page + 1,
           limit: state.products.limit,
+          status: "visible",
         };
         return customFetch({
           route: "/product/search",
