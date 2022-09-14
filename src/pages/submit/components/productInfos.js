@@ -1,49 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Form } from "../../../components/form";
 import Input from "../../../components/Input";
 import Select from "../../../components/Select";
 import TextArea from "../../../components/TextArea";
 import { submitActions } from "../../../features/submit";
-import { productsActions } from "../../../features/products";
 import { useEffect } from "react";
 import { typesActions } from "../../../features/types";
 import { Pop } from "../../../components/pop";
 
 export default function ProductInfos() {
-  const {
-    category,
-    type,
-    description,
-    price,
-    city,
-    surface,
-    rooms,
-    bedrooms,
-    isProductValid,
-  } = useSelector(state => state.submit);
+  const { category, type, description, price, city, surface, rooms, bedrooms } =
+    useSelector(state => state.submit);
   const types = useSelector(state => state.types.value);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const handleCreateProduct = e => {
-    e.preventDefault();
-    if (isProductValid == true) {
-      dispatch(
-        productsActions.addProduct({
-          type,
-          category,
-          description,
-          price,
-          city,
-          surface,
-          rooms,
-          bedrooms,
-        })
-      );
-      navigate("/dashboard");
-    }
-  };
 
   const handleCategoryChanged = e => {
     if (e.target.value === "")
@@ -135,9 +104,29 @@ export default function ProductInfos() {
     dispatch(submitActions.setBedrooms({ value: e.target.value, error: "" }));
   };
 
+  const checkProductValidity = () => {
+    if (
+      category.value === "" ||
+      type.value === "" ||
+      description.value.length < 3 ||
+      price.value <= 0 ||
+      city.value.length < 3 ||
+      surface.value <= 0 ||
+      rooms.value < 0 ||
+      bedrooms.value < 0
+    ) {
+      return dispatch(submitActions.setIsProductValid(false));
+    }
+    dispatch(submitActions.setIsProductValid(true));
+  };
+
   useEffect(() => {
     dispatch(typesActions.getTypes());
   }, []);
+
+  useEffect(() => {
+    checkProductValidity();
+  }, [category, type, description, price, city, surface, rooms, bedrooms]);
 
   return (
     <Pop>

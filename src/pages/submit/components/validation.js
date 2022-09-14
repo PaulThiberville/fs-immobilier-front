@@ -26,6 +26,8 @@ export default function Validation() {
     bedrooms,
     description,
     images,
+    isUserValid,
+    isProductValid,
   } = useSelector(state => state.submit);
 
   const handleSaveProduct = async () => {
@@ -92,6 +94,11 @@ export default function Validation() {
     });
   };
 
+  const isNotValid = () => {
+    if (isUserValid === true && isProductValid === true) return false;
+    return true;
+  };
+
   return (
     <>
       <Pop>
@@ -111,7 +118,10 @@ export default function Validation() {
           }}
         />
         <Buttons>
-          <Button onClick={async () => await handleSaveProduct()}>
+          <Button
+            onClick={async () => await handleSaveProduct()}
+            disabled={isNotValid()}
+          >
             Envoyer
           </Button>
         </Buttons>

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form } from "../../../components/form";
 import Input from "../../../components/Input";
@@ -8,6 +9,12 @@ import { checkIsEmail } from "../../../utils/checkIsEmail";
 export default function UserInfos() {
   const { name, email } = useSelector(state => state.submit);
   const dispatch = useDispatch();
+
+  const checkUserValidity = () => {
+    if (name.value <= 3 || checkIsEmail(email.value) === false)
+      return dispatch(submitActions.setIsUserValid(false));
+    dispatch(submitActions.setIsUserValid(true));
+  };
 
   const onNameChanged = value => {
     if (value.length <= 3) {
@@ -42,6 +49,10 @@ export default function UserInfos() {
       })
     );
   };
+
+  useEffect(() => {
+    checkUserValidity();
+  }, [name, email]);
 
   return (
     <Pop>

@@ -74,10 +74,10 @@ function createReducers() {
       state.isUserValid = action.payload;
     },
     setIsProductValid: (state, action) => {
-      state.isUserValid = action.payload;
+      state.isProductValid = action.payload;
     },
     setIsImagesValid: (state, action) => {
-      state.isUserValid = action.payload;
+      state.isImagesValid = action.payload;
     },
   };
 }
